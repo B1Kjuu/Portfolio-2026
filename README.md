@@ -1,33 +1,21 @@
-# 🚀 Developer & Editor Portfolio
+# b1kjuu.dev Portfolio
 
-Welcome to my portfolio! This space showcases my dual-focus work, bridging technical development with creative editing.
+This project is a Next.js React portfolio prepared for Vercel deployment. The first page is a chooser that asks visitors whether they want to enter the Tech or Editor side of the portfolio.
 
----
+## Routes
 
-## 📌 Table of Contents
+- `/` is the landing chooser.
+- `/tech` shows the developer portfolio.
+- `/editor` shows the creative editing portfolio.
 
+## Run locally
 
----
+1. Install dependencies with `npm install`.
+2. Start the dev server with `npm run dev`.
+3. Open `http://localhost:3000`.
 
-## 👤 About Me
-I am a hybrid creator specializing in both software development and media editing. This portfolio acts as a central hub for my technical builds, interactive applications, and creative visual/textual editing work.
+## Notes
 
----
-
-## 🛠 Tech & Creative Stack
-
-### 💻 Developer Tools
-
-
-### 🎬 Editor Tools
-
-
----
-
-## 📁 Highlighted Projects
-
-### 👨‍💻 Featured Developer Projects
-
----
-
-## 📨 Contact & Socials
+- The app uses the Next.js App Router.
+- The shared content lives in `lib/content.ts`.
+- Fonts are loaded with `next/font/google` for a more distinct look.
