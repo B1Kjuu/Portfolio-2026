@@ -8,6 +8,7 @@ import {
   Permanent_Marker,
   Space_Mono,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Providers from "./providers";
 import "./globals.css";
 
@@ -52,8 +53,8 @@ const accent = Epilogue({
 });
 
 export const metadata: Metadata = {
-  title: "b1kjuu.dev",
-  description: "A dual-path portfolio for development and editing work (b1kjuu.dev).",
+  title: "b1kjuu.studio",
+  description: "A dual-path portfolio for development and editing work (b1kjuu.studio).",
 };
 
 export default function RootLayout({
@@ -73,6 +74,7 @@ export default function RootLayout({
         className={`${display.variable} ${body.variable} ${mono.variable} ${marker.variable} ${scribble.variable} ${doodle.variable} ${accent.variable}`}
       >
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );

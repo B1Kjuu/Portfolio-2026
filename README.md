@@ -1,4 +1,4 @@
-# b1kjuu.dev Portfolio
+# b1kjuu.studio Portfolio
 
 This project is a Next.js React portfolio prepared for Vercel deployment. The first page is a chooser that asks visitors whether they want to enter the Tech or Editor side of the portfolio.
 

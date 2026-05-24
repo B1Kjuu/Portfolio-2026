@@ -23,7 +23,7 @@ import tailwindIcon from "./techicons/Tailwind.svg";
 import typescriptIcon from "./techicons/Typescript.svg";
 import vscodeIcon from "./techicons/vscode.svg";
 
-const resumeHref = new URL("./assets/CV_GUSI.pdf", import.meta.url).toString();
+const resumeHref = "/CV_GUSI.pdf";
 
 const projects = [
   {
@@ -77,13 +77,13 @@ const toolItems = [
 export default function TechPage() {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#fdf9ef] text-[#1c1c16]">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(rgba(199,198,205,0.4)_1px,transparent_1px),linear-gradient(to_right,rgba(199,198,205,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(199,198,205,0.15)_1px,transparent_1px)] bg-[size:20px_20px,40px_40px,40px_40px]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(rgba(199,198,205,0.4)_1px,transparent_1px),linear-gradient(to_right,rgba(199,198,205,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(199,198,205,0.15)_1px,transparent_1px)] bg-size-[20px_20px,40px_40px,40px_40px]" />
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_15%_25%,rgba(139,69,19,0.03)_0%,transparent_40%),radial-gradient(circle_at_85%_75%,rgba(139,69,19,0.04)_0%,transparent_50%),radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.01)_0%,transparent_100%)]" />
 
-      <nav className="sticky top-0 z-50 mx-2 mt-2 max-w-[calc(100%-16px)] rotate-[-1deg] border-b border-dashed border-black/10 bg-[rgba(245,240,220,0.85)] px-6 py-4 shadow-sm backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 mx-2 mt-2 max-w-[calc(100%-16px)] -rotate-1 border-b border-dashed border-black/10 bg-[rgba(245,240,220,0.85)] px-6 py-4 shadow-sm backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link className="-rotate-2 text-2xl text-[#ae2f34]" style={{ fontFamily: "var(--font-marker), cursive" }} href="#home">
-            Joebeck.dev
+            b1kjuu.studio
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             <a className="rotate-1 border-b-2 border-[#003936] pb-1 text-lg text-[#003936]" style={{ fontFamily: "var(--font-marker), cursive" }} href="#home">Home</a>
@@ -96,7 +96,7 @@ export default function TechPage() {
               component={Link}
               href="/"
               variant="outlined"
-              className="-rotate-1 !border-2 !px-3 !py-2 !text-sm md:!text-base"
+              className="-rotate-1 border-2! px-3! py-2! text-sm! md:text-base!"
               style={{ fontFamily: "var(--font-marker), cursive" }}
               sx={{
                 borderColor: "#181c2c",
@@ -111,7 +111,7 @@ export default function TechPage() {
               component={Link}
               href="/editor"
               variant="contained"
-              className="rotate-1 !px-3 !py-2 !text-sm md:!text-base"
+              className="rotate-1 px-3! py-2! text-sm! md:text-base!"
               style={{ fontFamily: "var(--font-marker), cursive" }}
               sx={{
                 backgroundColor: "#181c2c",
@@ -134,7 +134,7 @@ export default function TechPage() {
 
         <section className="relative z-10 mt-12 flex flex-col items-center gap-12 md:flex-row" id="home">
           <div className="flex-1 space-y-6">
-            <div className="inline-flex max-w-[220px] rotate-[-3deg] items-center gap-2 rounded-sm bg-[#fffdc2] px-4 py-3 text-2xl text-[#46464c] shadow-[2px_4px_6px_rgba(0,0,0,0.1)]" style={{ fontFamily: "var(--font-scribble), cursive" }}>
+            <div className="inline-flex max-w-55 -rotate-3 items-center gap-2 rounded-sm bg-[#fffdc2] px-4 py-3 text-2xl text-[#46464c] shadow-[2px_4px_6px_rgba(0,0,0,0.1)]" style={{ fontFamily: "var(--font-scribble), cursive" }}>
               Hi There! <WavingHandRoundedIcon fontSize="small" />
             </div>
 
@@ -157,7 +157,7 @@ export default function TechPage() {
               component="a"
               href="#projects"
               variant="contained"
-              className="group !mt-4 !px-6 !py-3"
+              className="group mt-4! px-6! py-3!"
               style={{ fontFamily: "var(--font-mono), monospace" }}
               sx={{
                 backgroundColor: "#ffffff",
@@ -177,7 +177,7 @@ export default function TechPage() {
             <div className="absolute -left-16 top-1/2 hidden -translate-y-1/2 rotate-12 text-3xl text-[#ae2f34] md:block" style={{ fontFamily: "var(--font-scribble), cursive" }}>
               That&apos;s me!
             </div>
-            <div className="absolute -top-3 left-1/2 z-20 h-7 w-24 -translate-x-1/2 rotate-[-2deg] border border-white/50 bg-[repeating-linear-gradient(45deg,rgba(241,238,228,0.7),rgba(241,238,228,0.7)_5px,rgba(0,57,54,0.4)_5px,rgba(0,57,54,0.4)_10px)] shadow-sm" />
+            <div className="absolute -top-3 left-1/2 z-20 h-7 w-24 -translate-x-1/2 -rotate-2 border border-white/50 bg-[repeating-linear-gradient(45deg,rgba(241,238,228,0.7),rgba(241,238,228,0.7)_5px,rgba(0,57,54,0.4)_5px,rgba(0,57,54,0.4)_10px)] shadow-sm" />
 
             <Paper className="relative z-10 max-w-sm border border-[#c7c6cd] bg-white p-4 pb-12 shadow-[4px_6px_15px_rgba(0,0,0,0.15)]" elevation={0}>
               <div className="absolute -right-4 -top-4 z-30 rotate-[-15deg] rounded-md border-[3px] border-[#1baca3] bg-white/70 px-2 py-1 text-xs font-bold text-[#1baca3]">VERIFIED AWESOME</div>
@@ -199,9 +199,9 @@ export default function TechPage() {
             <div className="absolute right-1/4 top-0 rotate-12 text-2xl text-[#ae2f34]" style={{ fontFamily: "var(--font-scribble), cursive" }}>Who am I?</div>
           </div>
 
-          <div className="relative mx-auto max-w-4xl rotate-[-1deg] border border-[#c7c6cd] bg-[#fcfaf2] p-8 shadow-[3px_4px_5px_rgba(24,28,44,0.15)] md:p-12">
-            <div className="absolute -left-0 top-[-25px] h-[60px] w-5 rounded-[10px] border-[3px] border-[#888]" />
-            <div className="absolute right-10 top-[-10px] h-7 w-24 rotate-12 border border-black/10 bg-[rgba(27,172,163,0.45)]" />
+            <div className="relative mx-auto max-w-4xl -rotate-1 border border-[#c7c6cd] bg-[#fcfaf2] p-8 shadow-[3px_4px_5px_rgba(24,28,44,0.15)] md:p-12">
+            <div className="absolute left-0 -top-6.25 h-15 w-5 rounded-[10px] border-[3px] border-[#888]" />
+            <div className="absolute right-10 -top-2.5 h-7 w-24 rotate-12 border border-black/10 bg-[rgba(27,172,163,0.45)]" />
 
             <div className="space-y-6 text-lg leading-relaxed text-[#1c1c16]">
               <p>I&apos;m a Frontend Developer and Computer Engineering student who loves creating engaging user experiences and bringing ideas to life through code. I&apos;m passionate about learning new technologies and continuously improving my skills.</p>
@@ -239,7 +239,7 @@ export default function TechPage() {
               const rotate = index % 3 === 0 ? "rotate-1" : index % 3 === 1 ? "-rotate-1" : "rotate-3";
               if (skill.type === "pin") {
                 return (
-                  <div key={skill.label} className={`relative z-20 flex h-[70px] w-[70px] flex-col items-center justify-center rounded-full border border-[#c7c6cd] bg-gradient-to-br from-white to-[#e6e2d8] shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8),2px_3px_5px_rgba(0,0,0,0.15)] ${rotate}`}>
+                  <div key={skill.label} className={`relative z-20 flex h-17.5 w-17.5 flex-col items-center justify-center rounded-full border border-[#c7c6cd] bg-linear-to-br from-white to-[#e6e2d8] shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8),2px_3px_5px_rgba(0,0,0,0.15)] ${rotate}`}>
                     {skill.icon ? (
                       <Image alt="" src={skill.icon} width={26} height={26} className="h-7 w-7 object-contain" />
                     ) : (
@@ -269,7 +269,7 @@ export default function TechPage() {
 
             <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-8">
               {toolItems.map((tool, idx) => (
-                <div key={tool.label} className={`relative z-10 flex h-[70px] w-[70px] flex-col items-center justify-center rounded-full border border-[#c7c6cd] bg-gradient-to-br from-white to-[#e6e2d8] shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8),2px_3px_5px_rgba(0,0,0,0.15)] ${idx === 0 ? "-rotate-1" : idx === 1 ? "rotate-3 scale-110" : idx === 2 ? "rotate-1" : "-rotate-2"}`}>
+                <div key={tool.label} className={`relative z-10 flex h-17.5 w-17.5 flex-col items-center justify-center rounded-full border border-[#c7c6cd] bg-linear-to-br from-white to-[#e6e2d8] shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8),2px_3px_5px_rgba(0,0,0,0.15)] ${idx === 0 ? "-rotate-1" : idx === 1 ? "rotate-3 scale-110" : idx === 2 ? "rotate-1" : "-rotate-2"}`}>
                   {tool.icon ? <Image alt="" src={tool.icon} width={22} height={22} className="h-6 w-6 object-contain" /> : tool.iconNode}
                   <span className="mt-1 text-[10px] font-bold text-[#1c1c16]" style={{ fontFamily: "var(--font-mono), monospace" }}>{tool.label}</span>
                 </div>
@@ -282,14 +282,14 @@ export default function TechPage() {
           <div className="relative rounded-xl border border-[#8b4513] bg-[#d2b48c] p-2 shadow-xl">
             <div className="relative overflow-hidden rounded-lg border border-[#bda27c] bg-[#f4e4c1] p-8 md:p-12">
               <div className="absolute left-1/2 top-0 z-30 -translate-x-1/2 -translate-y-2">
-                <div className="flex h-12 w-40 items-end justify-center rounded-t-lg border-b-2 border-[#333] bg-gradient-to-b from-[#888] to-[#555] pb-2 shadow-[0_5px_10px_rgba(0,0,0,0.3)]">
+                <div className="flex h-12 w-40 items-end justify-center rounded-t-lg border-b-2 border-[#333] bg-linear-to-b from-[#888] to-[#555] pb-2 shadow-[0_5px_10px_rgba(0,0,0,0.3)]">
                   <div className="mb-1 h-2 w-16 rounded-full bg-[#333]" />
                 </div>
                 <div className="-mt-1 mx-auto h-3 w-48 rounded-full bg-[#444] shadow-md" />
               </div>
 
               <div className="relative z-10 mb-16 pt-12 text-center">
-                <h2 className="inline-block rotate-[-2deg] border-2 border-[#181c2c] bg-white px-4 py-2 text-[clamp(2rem,4vw,3rem)] text-[#181c2c] shadow-[6px_6px_0px_0px_#181c2c]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
+                <h2 className="inline-block -rotate-2 border-2 border-[#181c2c] bg-white px-4 py-2 text-[clamp(2rem,4vw,3rem)] text-[#181c2c] shadow-[6px_6px_0px_0px_#181c2c]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
                   My <span className="text-[#003936]">Recent</span> Works
                 </h2>
                 <p className="mt-6 rotate-1 text-2xl text-[#46464c]" style={{ fontFamily: "var(--font-scribble), cursive" }}>Stuff I built recently...</p>
@@ -299,12 +299,12 @@ export default function TechPage() {
                 {projects.map((project, index) => (
                   <article key={project.title} className={`relative bg-white p-3 pb-9 shadow-[2px_4px_12px_rgba(0,0,0,0.1),0_0_20px_rgba(0,0,0,0.02)_inset] ${project.rotate} border border-[#e6e2d8] transition-transform duration-300 hover:scale-105`}>
                     {project.stamp ? (
-                      <div className="absolute -top-2 right-2 z-30 rotate-[20deg] rounded-lg border-4 border-[#ba1a1a] bg-white/60 px-3 py-1 text-xs tracking-[2px] text-[#ba1a1a] opacity-70">{project.stamp}</div>
+                      <div className="absolute -top-2 right-2 z-30 rotate-20 rounded-lg border-4 border-[#ba1a1a] bg-white/60 px-3 py-1 text-xs tracking-[2px] text-[#ba1a1a] opacity-70">{project.stamp}</div>
                     ) : null}
 
-                    <div className={`absolute -top-3 left-1/2 z-20 h-7 w-24 -translate-x-1/2 ${project.tape === "teal" ? "rotate-3 bg-[rgba(27,172,163,0.45)]" : project.tape === "dots" ? "bg-[rgba(241,238,228,0.8)] [background-image:radial-gradient(#ae2f34_2px,transparent_2px)] [background-size:10px_10px]" : "rotate-[-2deg] bg-[repeating-linear-gradient(45deg,rgba(241,238,228,0.7),rgba(241,238,228,0.7)_5px,rgba(0,57,54,0.4)_5px,rgba(0,57,54,0.4)_10px)]"}`} />
+                    <div className={`absolute -top-3 left-1/2 z-20 h-7 w-24 -translate-x-1/2 ${project.tape === "teal" ? "rotate-3 bg-[rgba(27,172,163,0.45)]" : project.tape === "dots" ? "bg-[rgba(241,238,228,0.8)] bg-[radial-gradient(#ae2f34_2px,transparent_2px)] bg-size-[10px_10px]" : "-rotate-2 bg-[repeating-linear-gradient(45deg,rgba(241,238,228,0.7),rgba(241,238,228,0.7)_5px,rgba(0,57,54,0.4)_5px,rgba(0,57,54,0.4)_10px)]"}`} />
 
-                    <div className="mb-4 aspect-[4/3] overflow-hidden border border-[#c7c6cd] bg-white p-1">
+                    <div className="mb-4 aspect-4/3 overflow-hidden border border-[#c7c6cd] bg-white p-1">
                       <img alt={project.title} className="h-full w-full object-cover" src={project.image} />
                     </div>
                     <h3 className={`mb-2 text-center text-xl text-[#181c2c] ${index % 2 ? "rotate-1" : "-rotate-2"}`} style={{ fontFamily: "var(--font-marker), cursive" }}>{project.title}</h3>
@@ -323,9 +323,9 @@ export default function TechPage() {
             </h2>
           </div>
 
-          <div className="relative mx-4 rotate-[-1deg] border border-[#c7c6cd] bg-[#fcfcf8] p-8 shadow-[5px_5px_15px_rgba(0,0,0,0.1)] md:p-12" style={{ backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px)", backgroundPosition: "0 2rem" }}>
+          <div className="relative mx-4 -rotate-1 border border-[#c7c6cd] bg-[#fcfcf8] p-8 shadow-[5px_5px_15px_rgba(0,0,0,0.1)] md:p-12" style={{ backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px)", backgroundPosition: "0 2rem" }}>
             <div className="absolute bottom-0 left-12 top-0 w-0.5 bg-[#ae2f34]/40 md:left-16" />
-            <div className="absolute bottom-0 left-[52px] top-0 w-0.5 bg-[#ae2f34]/40 md:left-[68px]" />
+            <div className="absolute bottom-0 left-13 top-0 w-0.5 bg-[#ae2f34]/40 md:left-17" />
 
             <div className="relative z-10 mt-8 space-y-12 pl-8 md:pl-16">
               <div>
@@ -372,7 +372,7 @@ export default function TechPage() {
               download
               variant="outlined"
               startIcon={<DownloadRoundedIcon />}
-              className="-rotate-2 !border-4 !px-8 !py-3 !text-xl"
+              className="-rotate-2 border-4! px-8! py-3! text-xl!"
               style={{ fontFamily: "var(--font-marker), cursive" }}
               sx={{
                 borderColor: "#181c2c",
