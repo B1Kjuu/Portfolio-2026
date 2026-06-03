@@ -33,33 +33,43 @@ function DesktopPathCard({
   iconClassName: string;
   shadowColor: string;
 }) {
+  const isTealCard = accent === "#0f766e";
+
   return (
     <Paper
       component={Link}
       href={href}
       elevation={0}
-      className={`group relative flex min-h-[21rem] flex-col overflow-hidden border border-[rgba(119,118,125,0.35)] bg-[#fdf9ef] p-6 transition-transform duration-200 active:scale-[0.985] md:min-h-[22rem] md:p-8 ${cardClassName}`}
+      className={`group relative flex min-h-78 flex-col overflow-hidden border-2 border-[#181c2c] bg-[#fdf9ef] p-6 transition-transform duration-300 hover:-translate-y-2 active:scale-[0.985] md:min-h-82 md:p-7 ${cardClassName}`}
       sx={{
-        borderRadius: "8px",
+        borderRadius: "2px",
         boxShadow: shadowColor,
         textDecoration: "none",
         color: "inherit",
       }}
     >
-      <div className={`absolute -top-4 z-20 h-7 rounded-[2px] border border-black/10 shadow-[0_3px_4px_rgba(0,0,0,0.12)] ${tapeClassName}`} />
-      <div className="absolute inset-y-0 right-4 hidden h-40 w-14 rounded-2xl border-2 border-[rgba(231,226,216,0.7)] md:block" />
-      <div className="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-[rgba(232,223,207,0.35)] blur-2xl" />
+      <div className={`absolute -top-3 z-20 h-6 w-16 rounded-xs shadow-[0_2px_4px_rgba(0,0,0,0.15)] ${tapeClassName}`} />
+      <div className="absolute inset-y-0 right-4 hidden w-14 rounded-2xl bg-white/45 md:block" />
+      <div className="absolute -right-8 top-1/2 hidden h-28 w-28 -translate-y-1/2 rounded-full bg-white/35 blur-2xl md:block" />
 
-      <div className="relative z-10 mb-5 flex items-center gap-4">
-        <div className={`grid h-14 w-14 place-items-center rounded-full ${iconClassName}`}>{icon}</div>
-        <Typography
-          component="h2"
-          className="m-0! text-[clamp(1.9rem,7vw,2.6rem)]! font-extrabold! leading-[1.05]! text-[#181c2c]"
-          style={{ fontFamily: "var(--font-display), sans-serif" }}
+      <div className="relative z-10 mb-6 flex items-center justify-center">
+        <div
+          className={`relative grid h-24 w-24 place-items-center rounded-[18px] border-2 border-dashed border-[#c7c6cd] bg-[#f7f3e9] transition-transform duration-300 group-hover:scale-110 ${iconClassName}`}
         >
-          {title}
-        </Typography>
+          {icon}
+          <span
+            className={`absolute h-3 w-3 rounded-full border border-[#181c2c] ${isTealCard ? "right-0 top-0 bg-[#5dd9d0]" : "left-0 bottom-0 bg-[#ffb3b0]"}`}
+          />
+        </div>
       </div>
+
+      <Typography
+        component="h2"
+        className="mx-auto mb-2 text-center text-[clamp(2rem,4vw,2.4rem)] font-extrabold leading-[1.1] text-[#181c2c]"
+        style={{ fontFamily: "var(--font-display), sans-serif" }}
+      >
+          {title}
+      </Typography>
 
       <div className="absolute left-5 top-5 max-h-[5.2rem] max-w-68 overflow-hidden text-[0.55rem] leading-[1.35] text-[#1c1c16] opacity-[0.08] md:text-[0.7rem]">
         {snippet.map((line) => (
@@ -67,13 +77,13 @@ function DesktopPathCard({
         ))}
       </div>
 
-      <Typography component="p" className="relative z-10 mb-6 max-w-[19ch] font-(--font-body)! text-[1.05rem]! leading-[1.55]! text-[#46464c] md:max-w-[24ch]">
+      <Typography component="p" className="relative z-10 mx-auto mb-6 max-w-[28ch] text-center text-[1.05rem] leading-[1.55] text-[#46464c] md:max-w-[25ch]">
         {description}
       </Typography>
 
       <Button
         endIcon={<ArrowForwardRoundedIcon fontSize="small" />}
-        className="relative z-10 mt-auto self-start rounded-full! border-2! px-4! py-3! text-[0.8rem]! shadow-[4px_4px_0_0_rgba(24,28,44,0.12)]! transition-transform group-active:translate-x-1 group-active:translate-y-1 group-active:shadow-none"
+        className="relative z-10 mx-auto mt-auto rounded-xs! border-2! px-5! py-2.5! text-[0.95rem]! shadow-[4px_4px_0_0_rgba(24,28,44,0.12)]! transition-transform group-active:translate-x-1 group-active:translate-y-1 group-active:shadow-none"
         component="span"
         variant="outlined"
         sx={{
@@ -84,6 +94,7 @@ function DesktopPathCard({
       >
         {cta}
       </Button>
+      {/* canonicalize rounded utility */}
     </Paper>
   );
 }
@@ -213,97 +224,89 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="hidden md:block">
-        <div className="relative min-h-screen bg-[linear-gradient(180deg,#fdf9ef_0%,#fdf9ef_100%)] px-4 py-10 sm:px-6 lg:px-8">
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-size-[20px_20px] opacity-70" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(93,217,208,0.14),transparent_30%),radial-gradient(circle_at_top_right,rgba(255,107,107,0.14),transparent_28%)]" />
+      <div className="hidden md:flex min-h-screen items-center justify-center p-4 text-[#1c1c16] bg-grid-paper">
+        <main className="w-full max-w-5xl mx-auto flex flex-col items-center gap-12 relative z-10">
+          <div id="explore" className="text-center space-y-4 max-w-2xl mx-auto relative rotate-sm-neg scroll-mt-24">
+            <div className="absolute -top-6 -left-8 w-16 h-16 opacity-50 text-[#ae2f34] pointer-events-none">
+              <svg fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M10 50 C 30 20, 70 80, 90 50" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
+                <path d="M40 30 C 50 10, 80 40, 70 70" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
+              </svg>
+            </div>
+            <h1 className="text-[36px] leading-[1.1] font-extrabold text-[#181c2c] md:text-[48px]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
+              Which side of my work would you like to explore?
+            </h1>
+            <p className="text-[20px] leading-[1.2] text-[#5f6471]" style={{ fontFamily: "var(--font-accent), sans-serif" }}>
+              Choose a path below to see my collected works.
+            </p>
+          </div>
 
-          <section className="relative mx-auto flex min-h-svh w-full max-w-[980px] flex-col justify-center gap-8">
-            <header className="relative z-10 text-center">
-              <div className="absolute -right-3 -top-6 rotate-12 text-[#003936]/40">
-                <svg fill="none" height="40" viewBox="0 0 100 100" width="40" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                  <path
-                    d="M20 50 C 30 20, 70 20, 80 50 C 90 80, 50 90, 20 80 Z"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeDasharray="10 5"
-                    strokeLinecap="round"
-                    strokeWidth="3"
-                  />
-                </svg>
+          <div className="flex w-full flex-col items-stretch justify-center gap-8 md:flex-row md:gap-16">
+            <Link href="/tech" className="group relative block w-full cursor-pointer transition-transform duration-300 hover:-translate-y-2 focus:outline-none md:w-1/2 max-w-md mx-auto">
+              <div className="absolute -top-3 -right-3 w-16 h-6 washi-tape-teal z-20 shadow-sm backdrop-blur-sm" />
+              <div className="bg-[#ffffff] block-shadow-teal rotate-sm p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 group-hover:block-shadow-teal hover:border-[#003936] group-focus:ring-4 ring-[#5dd9d0] ring-offset-2 ring-offset-[#fdf9ef]">
+                <div className="absolute inset-0 opacity-5 pointer-events-none text-left p-4 text-[10px] leading-tight text-[#2d3142] overflow-hidden" style={{ fontFamily: "var(--font-mono), monospace" }}>
+                  const portfolio = {'{'}<br />
+                  &nbsp;&nbsp;role: &quot;Developer&quot;,<br />
+                  &nbsp;&nbsp;skills: [&quot;React&quot;, &quot;Node&quot;, &quot;UI/UX&quot;],<br />
+                  &nbsp;&nbsp;passion: &quot;Creating tactile digital experiences&quot;,<br />
+                  &nbsp;&nbsp;status: &quot;Building&quot;<br />
+                  {'}'};<br /><br />
+                  function initialize() {'{'}<br />
+                  &nbsp;&nbsp;render(portfolio);<br />
+                  {'}'}
+                </div>
+                <div className="w-24 h-24 mb-6 rounded-full bg-[#fdf9ef] border-2 border-dashed border-[#c7c6cd] flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300">
+                  <span className="material-symbols-outlined text-4xl text-[#003936]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    terminal
+                  </span>
+                  <div className="absolute top-0 right-0 w-3 h-3 bg-[#5dd9d0] rounded-full border border-[#181c2c]" />
+                </div>
+                <h2 className="text-[32px] leading-[1.2] font-bold text-[#181c2c] mb-2 relative z-10" style={{ fontFamily: "var(--font-display), sans-serif" }}>The Developer</h2>
+                <p className="text-[16px] leading-normal text-[#46464c] mb-6 relative z-10" style={{ fontFamily: "var(--font-body), sans-serif" }}>
+                  Full-Stack &amp; Creative Tech. Dive into my code, architecture, and interactive experiments.
+                </p>
+                <div className="mt-auto relative z-10">
+                  <span className="inline-block px-4 py-2 bg-[#f1eee4] text-[14px] text-[#181c2c] border border-[#c7c6cd] rotate-sm-neg" style={{ fontFamily: "var(--font-mono), monospace" }}>
+                    Explore Code -&gt;
+                  </span>
+                </div>
               </div>
+            </Link>
 
-              <Typography component="p" className="mb-3 font-(--font-mono)! text-[0.8rem]! tracking-[0.16em]! uppercase text-[#5f6471]">
-                b1kjuu.studio
-              </Typography>
+            <Link href="/editor" className="group relative block w-full cursor-pointer transition-transform duration-300 hover:-translate-y-2 focus:outline-none md:w-1/2 max-w-md mx-auto">
+              <div className="absolute -top-3 -left-3 w-16 h-6 washi-tape-coral z-20 shadow-sm backdrop-blur-sm" />
+              <div className="bg-[#ffffff] block-shadow-coral rotate-sm-neg p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:border-[#ae2f34] group-focus:ring-4 ring-[#ffb3b0] ring-offset-2 ring-offset-[#fdf9ef]">
+                <div className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none text-[#2d3142] rotate-90 scale-150">
+                  <span className="material-symbols-outlined text-[120px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    movie
+                  </span>
+                </div>
+                <div className="w-24 h-24 mb-6 rounded-full bg-[#fdf9ef] border-2 border-dashed border-[#c7c6cd] flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300">
+                  <span className="material-symbols-outlined text-4xl text-[#ae2f34]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    movie_edit
+                  </span>
+                  <div className="absolute bottom-0 left-0 w-3 h-3 bg-[#ffb3b0] rounded-full border border-[#181c2c]" />
+                </div>
+                <h2 className="text-[32px] leading-[1.2] font-bold text-[#181c2c] mb-2 relative z-10" style={{ fontFamily: "var(--font-display), sans-serif" }}>The Editor</h2>
+                <p className="text-[16px] leading-normal text-[#46464c] mb-6 relative z-10" style={{ fontFamily: "var(--font-body), sans-serif" }}>
+                  Video &amp; Photo Design. Explore my visual storytelling, editing reels, and photography.
+                </p>
+                <div className="mt-auto relative z-10">
+                  <span className="inline-block px-4 py-2 bg-[#f1eee4] text-[14px] text-[#181c2c] border border-[#c7c6cd] rotate-sm" style={{ fontFamily: "var(--font-mono), monospace" }}>
+                    View Reel -&gt;
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
 
-              <Typography
-                component="h1"
-                className="mx-auto! mb-3! max-w-[14ch]! text-[clamp(3.2rem,6vw,4.9rem)]! font-extrabold! leading-[1.05]! tracking-[-0.03em] text-[#181c2c]"
-                style={{ fontFamily: "var(--font-display), sans-serif" }}
-              >
-                Hello there! <WavingHandRoundedIcon className="ml-1 align-middle text-[0.9em]! text-[#c24a4a]" />
-              </Typography>
-
-              <Typography component="p" className="mx-auto max-w-[34ch] font-(--font-body)! text-[1.15rem]! leading-[1.55]! text-[#46464c]">
-                Which side of my work would you like to explore today?
-              </Typography>
-            </header>
-
-            <div className="grid gap-10 md:grid-cols-2 lg:gap-16">
-              <DesktopPathCard
-                accent="#0f766e"
-                href="/tech"
-                icon={<TerminalRoundedIcon fontSize="large" />}
-                snippet={[
-                  "const portfolio = {",
-                  '  role: "Developer",',
-                  '  skills: ["React", "Node", "UI/UX"],',
-                  '  status: "Building"',
-                  "}",
-                ]}
-                title="The Developer"
-                description="Dive into lines of code, system architectures, and the digital tools I've built from the ground up."
-                cta="Explore Code"
-                tapeClassName="right-8 w-16 -rotate-6 bg-[rgba(178,208,204,0.92)] md:w-[4.9rem]"
-                cardClassName="rotate-[0.5deg] md:rotate-[0.35deg]"
-                iconClassName="bg-[#003936] text-[#7cf6ec]"
-                shadowColor="4px 4px 0 0 rgba(24,28,44,0.1)"
-              />
-
-              <DesktopPathCard
-                accent="#ae2f34"
-                href="/editor"
-                icon={<MovieRoundedIcon fontSize="large" />}
-                snippet={[
-                  "timeline = {",
-                  '  medium: "Video + Photo",',
-                  '  style: "Story-first",',
-                  '  pace: "Intentional"',
-                  "}",
-                ]}
-                title="The Editor"
-                description="Explore my visual storytelling, editing reels, and photography."
-                cta="View Reel"
-                tapeClassName="left-8 w-16 rotate-6 bg-[rgba(232,186,188,0.92)] md:w-[4.9rem]"
-                cardClassName="-rotate-[0.5deg] md:-rotate-[0.35deg]"
-                iconClassName="bg-[#ff6b6b] text-[#410006]"
-                shadowColor="4px 4px 0 0 rgba(255,179,176,0.9)"
-              />
-            </div>
-
-            <div className="relative z-10 pt-0 text-center">
-              <Typography
-                component={Link}
-                href="/tech"
-                className="inline-block px-2 py-1 text-[1.15rem]! text-[#46464c]! underline decoration-[#ff6b6b] decoration-2 underline-offset-4 transition-colors hover:text-[#181c2c]"
-                style={{ fontFamily: "var(--font-display), sans-serif" }}
-              >
-                Just browsing? Go to the full index.
-              </Typography>
-            </div>
-          </section>
-        </div>
+          <div className="mt-8 text-center rotate-sm">
+            <p className="text-[20px] leading-[1.2] text-[#77767d]" style={{ fontFamily: "var(--font-accent), sans-serif" }}>
+              Just browsing? <Link className="text-[#181c2c] underline decoration-[#ae2f34] decoration-2 transition-colors hover:text-[#ae2f34]" href="/tech">Go to the full index</Link>
+            </p>
+          </div>
+        </main>
       </div>
     </main>
   );
