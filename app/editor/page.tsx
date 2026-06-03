@@ -3,8 +3,7 @@
 import Image, { type StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { editorProjects, EditorItem } from "@/lib/content";
+import { editorProjects } from "@/lib/content";
 import { Button } from "react95/dist/Button/Button";
 import { Frame } from "react95/dist/Frame/Frame";
 import { Window } from "react95/dist/Window/Window";
