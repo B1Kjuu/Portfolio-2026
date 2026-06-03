@@ -3,6 +3,7 @@
 import Image, { type StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { editorProjects } from "@/lib/content";
 import { Button } from "react95/dist/Button/Button";
 import { Frame } from "react95/dist/Frame/Frame";
@@ -20,6 +21,8 @@ import reactIcon from "../tech/techicons/React.svg";
 import tailwindIcon from "../tech/techicons/Tailwind.svg";
 import typescriptIcon from "../tech/techicons/Typescript.svg";
 import vscodeIcon from "../tech/techicons/vscode.svg";
+import winDisplay from "../tech/techicons/win95DisplayMini.png";
+import winFolder from "../tech/techicons/win95Folder.png";
 
 type ProjectState = {
   title: string;
@@ -40,6 +43,8 @@ type DesktopWindow = {
   x?: number;
   y?: number;
   kind?: "project";
+  type?: "folder" | "video" | "system";
+  items?: any[];
 };
 
 type MobileApp = {
@@ -48,6 +53,8 @@ type MobileApp = {
   note: string;
   videoUrl: string;
   icon: StaticImageData;
+  type?: "folder" | "video";
+  items?: any[];
 };
 
 const appIcons = [reactIcon, nextIcon, typescriptIcon, tailwindIcon, nodeIcon, gitIcon, chromeIcon, vscodeIcon];
@@ -100,6 +107,7 @@ export default function EditorPage() {
     !["active", "primary", "square", "noPadding", "fixed", "position", "variant", "fullWidth", "shadow"].includes(prop);
   const [currentTime, setCurrentTime] = useState(() => formatMobileTime(new Date()));
   const [activeMobileProject, setActiveMobileProject] = useState<ProjectState | null>(null);
+  const [currentMobileFolder, setCurrentMobileFolder] = useState<any | null>(null);
   const [mobileLaunchState, setMobileLaunchState] = useState<"starting" | "ready" | "exiting">("starting");
   const [mobileBootVisible, setMobileBootVisible] = useState(true);
   const [mobileExitVisible, setMobileExitVisible] = useState(false);
@@ -171,13 +179,13 @@ export default function EditorPage() {
     updateTime();
     const interval = setInterval(updateTime, 60_000);
 
-    const initialWins = editorProjects.reduce((acc, project, index) => {
+const initialWins = editorProjects.reduce((acc, project, index) => {
       const id = `file-${index}`;
       acc[id] = {
         id,
         title: project.title,
-        description: project.description,
-        note: project.note,
+        description: project.description || "",
+        note: project.note || "",
         videoUrl: (project as any).videoUrl || "",
         isOpen: false,
         isMaximized: false,
@@ -185,7 +193,31 @@ export default function EditorPage() {
         x: 100 + index * 24,
         y: 80 + index * 18,
         kind: "project",
+        type: (project as any).type || "video",
+        items: (project as any).items || [],
       };
+
+      // Register folder sub-files with individual video IDs so they can have independent popup players
+      if ((project as any).type === "folder" && (project as any).items) {
+        (project as any).items.forEach((subItem: any, subIdx: number) => {
+          const subId = `sub-${index}-${subIdx}`;
+          acc[subId] = {
+            id: subId,
+            title: subItem.title,
+            description: subItem.description || "",
+            note: subItem.note || "",
+            videoUrl: subItem.videoUrl || "",
+            isOpen: false,
+            isMaximized: false,
+            zIndex: 10,
+            x: 140 + subIdx * 24,
+            y: 120 + subIdx * 18,
+            kind: "project",
+            type: "video"
+          };
+        });
+      }
+
       return acc;
     }, {} as Record<string, DesktopWindow>);
 
@@ -410,21 +442,27 @@ export default function EditorPage() {
     mobileExitTimerRef.current = window.setTimeout(() => router.replace("/#explore"), 960);
   };
 
-  const mobileApps: MobileApp[] = editorProjects.map((project, index) => ({
+  // Switch display arrays conditionally if a folder container sub-layer is open on mobile
+  const activeMobileGridItems = currentMobileFolder ? currentMobileFolder.items || [] : editorProjects;
+
+  const mobileApps: MobileApp[] = activeMobileGridItems.map((project: any, index: number) => ({
     title: project.title,
-    description: project.description,
-    note: project.note,
-    videoUrl: (windows[`file-${index}`]?.videoUrl as string) || "",
+    description: project.description || "",
+    note: project.note || "",
+    videoUrl: project.videoUrl || "",
+    type: project.type || "video",
+    items: project.items || [],
     icon: appIcons[index % appIcons.length],
   }));
 
   const desktopIcons = [
-    { label: "My Computer", icon: vscodeIcon, target: "file-0" },
-    { label: "Network Neighborhood", icon: chromeIcon, target: "file-1" },
-    { label: "Inbox", icon: nextIcon, target: "file-2" },
-    { label: "Recycle Bin", icon: gitIcon, target: "file-0" },
-    { label: "The Microsoft Network", icon: reactIcon, target: "file-1" },
-    { label: "My Briefcase", icon: tailwindIcon, target: "file-2" },
+    { label: "UGC", icon: winDisplay, target: "file-0" },
+    { label: "Travel", icon: winFolder, target: "file-1" },
+    { label: "Thesis", icon: winFolder, target: "file-2" },
+    { label: "Short Fact Reels", icon: winDisplay, target: "file-3" },
+    { label: "Real Estate", icon: winFolder, target: "file-4" },
+    { label: "Long Form", icon: winFolder, target: "file-5" },
+    { label: "Ai Generated", icon: winDisplay, target: "file-6" },
   ];
 
   const startMenuItems = [
@@ -505,7 +543,7 @@ export default function EditorPage() {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
     };
-  }, [sheetDragging]);
+  }, []);
 
   return (
     <div className="h-screen w-screen overflow-hidden select-none text-black font-sans">
@@ -604,6 +642,7 @@ export default function EditorPage() {
         </div>
       ) : null}
 
+      {/* MOBILE iOS SHELL */}
       <div className="md:hidden flex h-full items-center justify-center bg-[#09090b] px-2 py-3">
         <div className="relative h-full w-full max-h-[calc(100vh-24px)] max-w-97.5 rounded-[54px] border-4 border-[#1f1f23] bg-[#000000] p-2 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.95)]">
           <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[44px] bg-[#000000]">
@@ -675,31 +714,55 @@ export default function EditorPage() {
               <div className="relative z-10 flex h-full flex-col">
                 <div className="flex-1 overflow-y-auto px-4 pb-44 pt-14">
                   <div className="grid grid-cols-4 gap-x-3 gap-y-6">
+                    {/* iOS Subdirectory Go-Back Arrow */}
+                    {currentMobileFolder && (
+                      <button
+                        type="button"
+                        onClick={() => setCurrentMobileFolder(null)}
+                        className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
+                      >
+                        <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/20 p-1.5 shadow-[0_10px_20px_-9px_rgba(0,0,0,0.7)] ring-1 ring-white/30 backdrop-blur-md text-2xl">
+                          ⬅️
+                        </span>
+                        <span className="w-full px-0.5 text-center text-[11px] leading-[1.2] text-white font-medium" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.65)" }}>
+                          Go Back
+                        </span>
+                      </button>
+                    )}
+
                     {mobileApps.map((app, index) => (
                       <button
-                        key={app.title}
+                        key={index}
                         type="button"
-                        onClick={() =>
-                          setActiveMobileProject({
-                            title: app.title,
-                            description: app.description,
-                            note: app.note,
-                            videoUrl: app.videoUrl,
-                          })
-                        }
-                        className="flex flex-col items-center gap-1.5"
+                        onClick={() => {
+                          if (app.type === "folder") {
+                            setCurrentMobileFolder(app);
+                          } else {
+                            setActiveMobileProject({
+                              title: app.title,
+                              description: app.description,
+                              note: app.note,
+                              videoUrl: app.videoUrl,
+                            });
+                          }
+                        }}
+                        className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
                       >
-                        <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/12 p-1.5 shadow-[0_10px_20px_-9px_rgba(0,0,0,0.7)] ring-1 ring-white/18 backdrop-blur-sm">
-                          <Image
-                            src={app.icon}
-                            alt={`${app.title} icon`}
-                            width={46}
-                            height={46}
-                            className="h-10 w-10 rounded-2xl"
-                          />
+                        <span className={`flex h-14 w-14 items-center justify-center rounded-xl p-1.5 shadow-[0_10px_20px_-9px_rgba(0,0,0,0.7)] ring-1 ring-white/18 backdrop-blur-sm
+                          ${app.type === "folder" ? "bg-linear-to-b from-[#8ab4f8] to-[#0055ff] text-2xl" : "bg-white/12"}`}
+                        >
+                          {app.type === "folder" ? "📁" : (
+                            <Image
+                              src={app.icon}
+                              alt={`${app.title} icon`}
+                              width={46}
+                              height={46}
+                              className="h-10 w-10 rounded-2xl"
+                            />
+                          )}
                         </span>
                         <span className="w-full px-0.5 text-center text-[11px] leading-[1.2] text-white line-clamp-2" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.65)" }}>
-                          {index === 0 ? "Project 1" : app.title}
+                          {index === 0 && !currentMobileFolder ? "Project 1" : app.title}
                         </span>
                       </button>
                     ))}
@@ -736,7 +799,7 @@ export default function EditorPage() {
                     >
                       <div className="rounded-t-[22px] bg-[#f2f2f7] shadow-[0_-16px_40px_rgba(0,0,0,0.45)]">
                         <div
-                          className="flex justify-center pt-2.5"
+                          className="flex justify-center pt-2.5 animate-pulse"
                           onPointerDown={(event) => {
                             sheetDragRef.current = { startY: event.clientY, startOffset: sheetOffsetRef.current };
                             setSheetDragging(true);
@@ -807,6 +870,7 @@ export default function EditorPage() {
         </div>
       </div>
 
+      {/* DESKTOP WINDOWS SHELL */}
       {isDesktopViewport ? (
       <div className="retro-screen fixed inset-0 overflow-hidden select-none bg-[#008080]">
         <StyleSheetManager shouldForwardProp={shouldForwardProp}>
@@ -849,7 +913,7 @@ export default function EditorPage() {
                                 position: "absolute",
                                 left,
                                 top,
-                                width: 860,
+                                width: win.type === "folder" ? 520 : 860,
                                 maxWidth: "calc(100vw - 4rem)",
                                 zIndex: win.zIndex,
                               }}
@@ -859,7 +923,6 @@ export default function EditorPage() {
                                 className="flex items-center justify-between px-1 py-0.5"
                                 onPointerDown={(e) => {
                                   if ((e.target as HTMLElement).closest("button")) return;
-                                  // begin dragging
                                   try {
                                     (e.currentTarget as Element).setPointerCapture(e.pointerId);
                                   } catch (_) {}
@@ -867,7 +930,7 @@ export default function EditorPage() {
                                   dragRef.current = { id: win.id, startX: e.clientX, startY: e.clientY, startLeft: left, startTop: top };
                                 }}
                               >
-                                <span className="truncate text-[12px]">{win.title} - Windows Media Player</span>
+                                <span className="truncate text-[12px]">{win.title} - {win.type === "folder" ? "File Explorer" : "Windows Media Player"}</span>
                                 <div className="flex items-center gap-1">
                                   <Button size="sm" onPointerDown={(e) => e.stopPropagation()} onClick={() => setWindows((prev) => ({ ...prev, [win.id]: { ...prev[win.id], isMaximized: !prev[win.id].isMaximized } }))}>
                                     {win.isMaximized ? "🗗" : "🗖"}
@@ -878,48 +941,57 @@ export default function EditorPage() {
                                 </div>
                               </WindowHeader>
 
-                              <WindowContent className="bg-[#c0c0c0] p-3">
-                                <div className="flex gap-3">
-                                  <div className="min-w-0 flex-1">
-                                    <div className="mb-2 flex items-center gap-2 text-[11px]">
-                                      <span>File</span>
-                                      <span>Edit</span>
-                                      <span>View</span>
-                                      <span>Play</span>
-                                      <span>Help</span>
+                              <WindowContent className="bg-[#c0c0c0] p-3 h-[calc(100%-32px)]">
+                                {/* DYNAMIC SUB-VIEW BRANCH: CHOOSE FOLDER ICON LIST vs MEDIA PLAYER VIEW */}
+                                {win.type === "folder" ? (
+                                  <div 
+                                    style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080', minHeight: '380px', padding: '16px' }} 
+                                    className="grid grid-cols-4 gap-6 content-start overflow-y-auto shadow-inner font-sans h-full"
+                                  >
+                                    {win.items && win.items.map((subItem: any, subIdx: number) => {
+                                      // Dynamically parse target matching ID registered in original initialization loop
+                                      const mappedSubId = `sub-${win.id.split('-')[1]}-${subIdx}`;
+                                      return (
+                                        <div
+                                          key={subIdx}
+                                          onClick={() => openWin(mappedSubId)}
+                                          className="flex flex-col items-center justify-center p-2 cursor-pointer hover:bg-[#000080]/10 border border-transparent hover:border-black/10 rounded-sm group text-center"
+                                        >
+                                          <div className="text-4xl mb-2 filter drop-shadow-sm group-active:scale-95 transition-transform">🎬</div>
+                                          <span className="text-[11px] text-black leading-tight truncate max-w-full font-medium">
+                                            {subItem.title.replace(/\s+/g, "_")}.exe
+                                          </span>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                ) : (
+                                  <div className="flex gap-4 h-full min-h-95">
+                                    {/* Left: Sleek Black Media Player (Perfect for vertical videos) */}
+                                    <div className="flex-1 bg-black border-2 border-gray-400 border-t-gray-800 border-l-gray-800 relative flex items-center justify-center">
+                                      {win.videoUrl ? (
+                                        <video src={win.videoUrl} controls autoPlay playsInline className="absolute inset-0 w-full h-full object-contain" />
+                                      ) : (
+                                        <div className="text-white text-xs">System Application</div>
+                                      )}
                                     </div>
 
-                                    <Frame variant="field" className="bg-[#efefef] p-3">
-                                      <p className="text-xs font-bold">Project Description:</p>
-                                      <p className="mt-1 text-xs italic">{win.description}</p>
-                                      <p className="mt-2 text-[11px] text-gray-700">Note: {win.note}</p>
-                                    </Frame>
-
-                                    <Frame variant="field" className="mt-3 overflow-hidden bg-black p-1">
-                                      {win.videoUrl ? (
-                                        <video src={win.videoUrl} controls autoPlay playsInline className="h-80 w-full object-contain bg-black" />
-                                      ) : (
-                                        <div className="flex h-80 items-center justify-center bg-black text-[12px] text-white/70">
-                                          No preview available
-                                        </div>
-                                      )}
-                                    </Frame>
+                                    {/* Right: Clean Project Info Panel */}
+                                    <div className="w-56 flex flex-col gap-2 shrink-0">
+                                      <Frame variant="field" className="bg-white p-3 h-full overflow-y-auto border-2 border-gray-400 border-t-gray-800 border-l-gray-800">
+                                        <h3 className="font-bold text-sm mb-2 pb-1 border-b border-gray-300 text-black">{win.title}</h3>
+                                        <p className="text-xs text-gray-800 leading-relaxed mb-3">{win.description}</p>
+                                        {win.note && (
+                                          <div className="bg-[#ffffe1] border border-gray-300 p-2 text-[10px] text-gray-800 mt-auto shadow-sm">
+                                            <span className="font-bold text-red-600">Note:</span> {win.note}
+                                          </div>
+                                        )}
+                                      </Frame>
+                                    </div>
                                   </div>
+                                )}
 
-                                  <div className="flex w-56 flex-col gap-2">
-                                    <Frame variant="field" className="bg-[#efefef] p-2 text-[11px] leading-relaxed">
-                                      <p className="font-bold">Now Playing</p>
-                                      <p className="mt-1">Classic desktop shell with a retro media preview and draggable window chrome.</p>
-                                    </Frame>
-
-                                    <Frame variant="field" className="flex-1 bg-[#efefef] p-2 text-[11px] leading-relaxed">
-                                      <p className="font-bold">Details</p>
-                                      <p className="mt-1">Open projects from the desktop. This view is styled to feel closer to Windows 95 than a modern modal.</p>
-                                    </Frame>
-                                  </div>
-                                </div>
-
-                                <div className="mt-3 flex items-center justify-between text-[11px]">
+                                <div className="mt-3 flex items-center justify-between text-[11px] font-bold">
                                   <span>▶ Loading Stream Pipeline...</span>
                                   <span>{currentTime}</span>
                                 </div>
@@ -977,7 +1049,6 @@ export default function EditorPage() {
                                       return;
                                     }
                                     if (item.label === "Open Portfolio...") {
-                                      // open developer portfolio
                                       window.location.href = '/';
                                       return;
                                     }
@@ -985,7 +1056,6 @@ export default function EditorPage() {
                                       beginShutdown();
                                       return;
                                     }
-                                    // map other items to windows
                                     if (item.label === 'About Me') openWin('about');
                                     if (item.label === 'Resume') openWin('resume');
                                     if (item.label === 'Skills') openWin('skills');
@@ -1038,9 +1108,10 @@ export default function EditorPage() {
                     ) : null}
                   </div>
                 </div>
+
               </div>
             </div>
-        </ThemeProvider>
+          </ThemeProvider>
         </StyleSheetManager>
       </div>
       ) : null}
