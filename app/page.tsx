@@ -94,7 +94,6 @@ function DesktopPathCard({
       >
         {cta}
       </Button>
-      {/* canonicalize rounded utility */}
     </Paper>
   );
 }
@@ -161,152 +160,176 @@ function MobilePathCard({
 export default function HomePage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fdf9ef] text-[#1c1c16]">
-      <div className="md:hidden">
-        <div className="min-h-[max(884px,100dvh)] bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-size-[20px_20px] px-6 py-12">
-          <section className="mx-auto flex w-full max-w-sm flex-col items-center justify-center gap-6">
-            <header className="relative z-10 mb-2 w-full text-center">
-              <h1 className="mb-3 text-[36px] font-extrabold leading-[1.1] text-[#181c2c]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
-                Hello there! <WavingHandRoundedIcon className="ml-1 align-middle text-3xl text-[#ae2f34]" />
-              </h1>
-              <p className="mx-auto max-w-xs text-lg leading-[1.6] text-[#46464c]" style={{ fontFamily: "var(--font-body), sans-serif" }}>
-                Which side of my work would you like to explore today?
-              </p>
+      
+      {/* --- NEW WELCOME HERO SCREEN --- */}
+      <section id="home" className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center px-6 text-center bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-[size:20px_20px]">
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
+          
+          <div className="mb-6 inline-block rotate-2 bg-[#f1eee4] px-4 py-1 border border-[#c7c6cd] shadow-sm">
+            <span className="text-sm font-bold text-[#ae2f34]" style={{ fontFamily: "var(--font-mono), monospace" }}>
+              Welcome to my portfolio
+            </span>
+          </div>
 
-              <div className="absolute -right-4 -top-8 rotate-12 text-[#003936] opacity-40">
-                <svg fill="none" height="40" viewBox="0 0 100 100" width="40" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                  <path
-                    d="M20 50 C 30 20, 70 20, 80 50 C 90 80, 50 90, 20 80 Z"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeDasharray="10 5"
-                    strokeLinecap="round"
-                    strokeWidth="3"
-                  />
+          <h1 className="mb-6 text-[clamp(3rem,8vw,5rem)] font-extrabold leading-[1.1] text-[#181c2c]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
+            Hi, I'm Joebeck. <WavingHandRoundedIcon className="inline-block align-baseline text-[clamp(2.5rem,7vw,4.5rem)] text-[#ae2f34] animate-[wave_2s_ease-in-out_infinite] origin-bottom-right" />
+          </h1>
+
+          <p className="mx-auto mb-16 max-w-2xl text-[clamp(1.1rem,3vw,1.4rem)] leading-[1.6] text-[#46464c]" style={{ fontFamily: "var(--font-body), sans-serif" }}>
+            I engineer tactile web applications and craft high-retention visual stories.
+          </p>
+
+          <a href="#explore" className="group flex flex-col items-center justify-center gap-3 text-[#181c2c] transition-colors hover:text-[#ae2f34]">
+            <span className="text-xs font-bold uppercase tracking-widest" style={{ fontFamily: "var(--font-mono), monospace" }}>
+              Choose a Path
+            </span>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-current transition-transform duration-300 group-hover:translate-y-2">
+              <ArrowForwardRoundedIcon className="rotate-90" />
+            </div>
+          </a>
+        </div>
+
+        {/* Decorative corner element */}
+        <div className="absolute -left-4 top-16 rotate-12 text-[#003936] opacity-30 md:left-12 md:top-24">
+          <svg fill="none" height="60" viewBox="0 0 100 100" width="60" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <path d="M20 50 C 30 20, 70 20, 80 50 C 90 80, 50 90, 20 80 Z" fill="none" stroke="currentColor" strokeDasharray="10 5" strokeLinecap="round" strokeWidth="3" />
+          </svg>
+        </div>
+      </section>
+
+      {/* --- PORTFOLIO CHOICE SCREEN --- */}
+      <div id="explore" className="scroll-mt-0">
+        
+        {/* Mobile Layout */}
+        <div className="md:hidden">
+          <div className="min-h-[100dvh] bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-[size:20px_20px] px-6 py-12 flex flex-col justify-center">
+            <section className="mx-auto flex w-full max-w-sm flex-col items-center justify-center gap-6">
+              <header className="relative z-10 mb-2 w-full text-center">
+                <h2 className="mb-3 text-[36px] font-extrabold leading-[1.1] text-[#181c2c]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
+                  Let's dive in.
+                </h2>
+                <p className="mx-auto max-w-xs text-lg leading-[1.6] text-[#46464c]" style={{ fontFamily: "var(--font-body), sans-serif" }}>
+                  Which side of my work would you like to explore today?
+                </p>
+              </header>
+
+              <MobilePathCard
+                href="/tech"
+                tape="teal"
+                title="The Developer"
+                description="Dive into lines of code, system architectures, and the digital tools I've built from the ground up."
+                cta="Explore Code"
+                icon={<TerminalRoundedIcon sx={{ fontSize: 32 }} />}
+                iconWrap="bg-[#003936] text-[#7cf6ec]"
+                cardRotate="rotate-[0.5deg]"
+                ctaClass="border-[#181c2c] bg-[#181c2c] text-white shadow-[4px_4px_0_0_rgba(0,57,54,0.3)]"
+              />
+
+              <MobilePathCard
+                href="/editor"
+                tape="pink"
+                title="The Editor"
+                description="Watch the stories I've crafted through cuts, color grading, and careful pacing."
+                cta="View Reel"
+                icon={<MovieRoundedIcon sx={{ fontSize: 32 }} />}
+                iconWrap="bg-[#ff6b6b] text-[#6d0010]"
+                cardRotate="-rotate-[0.5deg]"
+                ctaClass="border-[#181c2c] bg-[#f1eee4] text-[#181c2c] shadow-[4px_4px_0_0_rgba(174,47,52,0.2)]"
+              />
+
+              <div className="z-10 mt-5 pb-6 text-center">
+                <Link
+                  className="relative inline-block px-2 py-1 text-xl leading-[1.2] text-[#46464c] transition-colors hover:text-[#181c2c]"
+                  style={{ fontFamily: "var(--font-accent), sans-serif" }}
+                  href="/tech"
+                >
+                  Just browsing? Go to the full index.
+                  <span className="absolute -bottom-0.5 left-0 -z-10 h-1 w-full -rotate-1 rounded-full bg-[#ff6b6b]" />
+                </Link>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden md:flex min-h-screen items-center justify-center p-4 text-[#1c1c16] bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-[size:20px_20px]">
+          <main className="w-full max-w-5xl mx-auto flex flex-col items-center gap-12 relative z-10">
+            <div className="text-center space-y-4 max-w-2xl mx-auto relative rotate-sm-neg">
+              <div className="absolute -top-6 -left-8 w-16 h-16 opacity-50 text-[#ae2f34] pointer-events-none">
+                <svg fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                  <path d="M10 50 C 30 20, 70 80, 90 50" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
+                  <path d="M40 30 C 50 10, 80 40, 70 70" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
                 </svg>
               </div>
-            </header>
+              <h2 className="text-[36px] leading-[1.1] font-extrabold text-[#181c2c] md:text-[48px]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
+                Which side of my work would you like to explore?
+              </h2>
+              <p className="text-[20px] leading-[1.2] text-[#5f6471]" style={{ fontFamily: "var(--font-accent), sans-serif" }}>
+                Choose a path below to see my collected works.
+              </p>
+            </div>
 
-            <MobilePathCard
-              href="/tech"
-              tape="teal"
-              title="The Developer"
-              description="Dive into lines of code, system architectures, and the digital tools I've built from the ground up."
-              cta="Explore Code"
-              icon={<TerminalRoundedIcon sx={{ fontSize: 32 }} />}
-              iconWrap="bg-[#003936] text-[#7cf6ec]"
-              cardRotate="rotate-[0.5deg]"
-              ctaClass="border-[#181c2c] bg-[#181c2c] text-white shadow-[4px_4px_0_0_rgba(0,57,54,0.3)]"
-            />
+            <div className="flex w-full flex-col items-stretch justify-center gap-8 md:flex-row md:gap-16">
+              <Link href="/tech" className="group relative block w-full cursor-pointer transition-transform duration-300 hover:-translate-y-2 focus:outline-none md:w-1/2 max-w-md mx-auto">
+                <div className="absolute -top-3 -right-3 w-16 h-6 bg-[rgba(27,172,163,0.6)] -rotate-2 border border-black/5 z-20 shadow-sm backdrop-blur-sm" />
+                <div className="bg-[#ffffff] shadow-[4px_4px_0_0_rgba(0,57,54,0.3)] rotate-[0.5deg] border border-[#c7c6cd] p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:border-[#003936] group-focus:ring-4 ring-[#5dd9d0] ring-offset-2 ring-offset-[#fdf9ef]">
+                  <div className="absolute inset-0 opacity-5 pointer-events-none text-left p-4 text-[10px] leading-tight text-[#2d3142] overflow-hidden" style={{ fontFamily: "var(--font-mono), monospace" }}>
+                    const portfolio = {'{'}<br />
+                    &nbsp;&nbsp;role: &quot;Developer&quot;,<br />
+                    &nbsp;&nbsp;skills: [&quot;React&quot;, &quot;Node&quot;, &quot;UI/UX&quot;],<br />
+                    &nbsp;&nbsp;passion: &quot;Creating tactile digital experiences&quot;,<br />
+                    &nbsp;&nbsp;status: &quot;Building&quot;<br />
+                    {'}'};<br /><br />
+                    function initialize() {'{'}<br />
+                    &nbsp;&nbsp;render(portfolio);<br />
+                    {'}'}
+                  </div>
+                  <div className="w-24 h-24 mb-6 rounded-full bg-[#fdf9ef] border-2 border-dashed border-[#c7c6cd] flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300">
+                    <TerminalRoundedIcon sx={{ fontSize: 40, color: "#003936" }} />
+                    <div className="absolute top-0 right-0 w-3 h-3 bg-[#5dd9d0] rounded-full border border-[#181c2c]" />
+                  </div>
+                  <h3 className="text-[32px] leading-[1.2] font-bold text-[#181c2c] mb-2 relative z-10" style={{ fontFamily: "var(--font-display), sans-serif" }}>The Developer</h3>
+                  <p className="text-[16px] leading-normal text-[#46464c] mb-6 relative z-10" style={{ fontFamily: "var(--font-body), sans-serif" }}>
+                    Full-Stack &amp; Creative Tech. Dive into my code, architecture, and interactive experiments.
+                  </p>
+                  <div className="mt-auto relative z-10">
+                    <span className="inline-block px-4 py-2 bg-[#181c2c] text-[14px] text-white border border-[#181c2c] -rotate-1" style={{ fontFamily: "var(--font-mono), monospace" }}>
+                      Explore Code -&gt;
+                    </span>
+                  </div>
+                </div>
+              </Link>
 
-            <MobilePathCard
-              href="/editor"
-              tape="pink"
-              title="The Editor"
-              description="Watch the stories I've crafted through cuts, color grading, and careful pacing."
-              cta="View Reel"
-              icon={<MovieRoundedIcon sx={{ fontSize: 32 }} />}
-              iconWrap="bg-[#ff6b6b] text-[#6d0010]"
-              cardRotate="-rotate-[0.5deg]"
-              ctaClass="border-[#181c2c] bg-[#f1eee4] text-[#181c2c] shadow-[4px_4px_0_0_rgba(174,47,52,0.2)]"
-            />
-
-            <div className="z-10 mt-5 pb-6 text-center">
-              <Link
-                className="relative inline-block px-2 py-1 text-xl leading-[1.2] text-[#46464c] transition-colors hover:text-[#181c2c]"
-                style={{ fontFamily: "var(--font-accent), sans-serif" }}
-                href="/tech"
-              >
-                Just browsing? Go to the full index.
-                <span className="absolute -bottom-0.5 left-0 -z-10 h-1 w-full -rotate-1 rounded-full bg-[#ff6b6b]" />
+              <Link href="/editor" className="group relative block w-full cursor-pointer transition-transform duration-300 hover:-translate-y-2 focus:outline-none md:w-1/2 max-w-md mx-auto">
+                <div className="absolute -top-3 -left-3 w-20 h-6 bg-[rgba(255,107,107,0.6)] rotate-[1.5deg] border border-black/5 z-20 shadow-sm backdrop-blur-sm" />
+                <div className="bg-[#ffffff] shadow-[4px_4px_0_0_rgba(174,47,52,0.2)] -rotate-[0.5deg] border border-[#c7c6cd] p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:border-[#ae2f34] group-focus:ring-4 ring-[#ffb3b0] ring-offset-2 ring-offset-[#fdf9ef]">
+                  <div className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none text-[#2d3142] rotate-90 scale-150">
+                    <MovieRoundedIcon sx={{ fontSize: 180 }} />
+                  </div>
+                  <div className="w-24 h-24 mb-6 rounded-full bg-[#fdf9ef] border-2 border-dashed border-[#c7c6cd] flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300">
+                    <MovieRoundedIcon sx={{ fontSize: 40, color: "#ae2f34" }} />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 bg-[#ffb3b0] rounded-full border border-[#181c2c]" />
+                  </div>
+                  <h3 className="text-[32px] leading-[1.2] font-bold text-[#181c2c] mb-2 relative z-10" style={{ fontFamily: "var(--font-display), sans-serif" }}>The Editor</h3>
+                  <p className="text-[16px] leading-normal text-[#46464c] mb-6 relative z-10" style={{ fontFamily: "var(--font-body), sans-serif" }}>
+                    Video &amp; Photo Design. Explore my visual storytelling, editing reels, and photography.
+                  </p>
+                  <div className="mt-auto relative z-10">
+                    <span className="inline-block px-4 py-2 bg-[#f1eee4] text-[14px] text-[#181c2c] border border-[#c7c6cd] rotate-1" style={{ fontFamily: "var(--font-mono), monospace" }}>
+                      View Reel -&gt;
+                    </span>
+                  </div>
+                </div>
               </Link>
             </div>
-          </section>
-        </div>
-      </div>
 
-      <div className="hidden md:flex min-h-screen items-center justify-center p-4 text-[#1c1c16] bg-grid-paper">
-        <main className="w-full max-w-5xl mx-auto flex flex-col items-center gap-12 relative z-10">
-          <div id="explore" className="text-center space-y-4 max-w-2xl mx-auto relative rotate-sm-neg scroll-mt-24">
-            <div className="absolute -top-6 -left-8 w-16 h-16 opacity-50 text-[#ae2f34] pointer-events-none">
-              <svg fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                <path d="M10 50 C 30 20, 70 80, 90 50" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
-                <path d="M40 30 C 50 10, 80 40, 70 70" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
-              </svg>
+            <div className="mt-8 text-center rotate-1">
+              <p className="text-[20px] leading-[1.2] text-[#77767d]" style={{ fontFamily: "var(--font-accent), sans-serif" }}>
+                Just browsing? <Link className="text-[#181c2c] underline decoration-[#ae2f34] decoration-2 transition-colors hover:text-[#ae2f34]" href="/tech">Go to the full index</Link>
+              </p>
             </div>
-            <h1 className="text-[36px] leading-[1.1] font-extrabold text-[#181c2c] md:text-[48px]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
-              Which side of my work would you like to explore?
-            </h1>
-            <p className="text-[20px] leading-[1.2] text-[#5f6471]" style={{ fontFamily: "var(--font-accent), sans-serif" }}>
-              Choose a path below to see my collected works.
-            </p>
-          </div>
-
-          <div className="flex w-full flex-col items-stretch justify-center gap-8 md:flex-row md:gap-16">
-            <Link href="/tech" className="group relative block w-full cursor-pointer transition-transform duration-300 hover:-translate-y-2 focus:outline-none md:w-1/2 max-w-md mx-auto">
-              <div className="absolute -top-3 -right-3 w-16 h-6 washi-tape-teal z-20 shadow-sm backdrop-blur-sm" />
-              <div className="bg-[#ffffff] block-shadow-teal rotate-sm p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 group-hover:block-shadow-teal hover:border-[#003936] group-focus:ring-4 ring-[#5dd9d0] ring-offset-2 ring-offset-[#fdf9ef]">
-                <div className="absolute inset-0 opacity-5 pointer-events-none text-left p-4 text-[10px] leading-tight text-[#2d3142] overflow-hidden" style={{ fontFamily: "var(--font-mono), monospace" }}>
-                  const portfolio = {'{'}<br />
-                  &nbsp;&nbsp;role: &quot;Developer&quot;,<br />
-                  &nbsp;&nbsp;skills: [&quot;React&quot;, &quot;Node&quot;, &quot;UI/UX&quot;],<br />
-                  &nbsp;&nbsp;passion: &quot;Creating tactile digital experiences&quot;,<br />
-                  &nbsp;&nbsp;status: &quot;Building&quot;<br />
-                  {'}'};<br /><br />
-                  function initialize() {'{'}<br />
-                  &nbsp;&nbsp;render(portfolio);<br />
-                  {'}'}
-                </div>
-                <div className="w-24 h-24 mb-6 rounded-full bg-[#fdf9ef] border-2 border-dashed border-[#c7c6cd] flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300">
-                  <span className="material-symbols-outlined text-4xl text-[#003936]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    terminal
-                  </span>
-                  <div className="absolute top-0 right-0 w-3 h-3 bg-[#5dd9d0] rounded-full border border-[#181c2c]" />
-                </div>
-                <h2 className="text-[32px] leading-[1.2] font-bold text-[#181c2c] mb-2 relative z-10" style={{ fontFamily: "var(--font-display), sans-serif" }}>The Developer</h2>
-                <p className="text-[16px] leading-normal text-[#46464c] mb-6 relative z-10" style={{ fontFamily: "var(--font-body), sans-serif" }}>
-                  Full-Stack &amp; Creative Tech. Dive into my code, architecture, and interactive experiments.
-                </p>
-                <div className="mt-auto relative z-10">
-                  <span className="inline-block px-4 py-2 bg-[#f1eee4] text-[14px] text-[#181c2c] border border-[#c7c6cd] rotate-sm-neg" style={{ fontFamily: "var(--font-mono), monospace" }}>
-                    Explore Code -&gt;
-                  </span>
-                </div>
-              </div>
-            </Link>
-
-            <Link href="/editor" className="group relative block w-full cursor-pointer transition-transform duration-300 hover:-translate-y-2 focus:outline-none md:w-1/2 max-w-md mx-auto">
-              <div className="absolute -top-3 -left-3 w-16 h-6 washi-tape-coral z-20 shadow-sm backdrop-blur-sm" />
-              <div className="bg-[#ffffff] block-shadow-coral rotate-sm-neg p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:border-[#ae2f34] group-focus:ring-4 ring-[#ffb3b0] ring-offset-2 ring-offset-[#fdf9ef]">
-                <div className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none text-[#2d3142] rotate-90 scale-150">
-                  <span className="material-symbols-outlined text-[120px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    movie
-                  </span>
-                </div>
-                <div className="w-24 h-24 mb-6 rounded-full bg-[#fdf9ef] border-2 border-dashed border-[#c7c6cd] flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300">
-                  <span className="material-symbols-outlined text-4xl text-[#ae2f34]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    movie_edit
-                  </span>
-                  <div className="absolute bottom-0 left-0 w-3 h-3 bg-[#ffb3b0] rounded-full border border-[#181c2c]" />
-                </div>
-                <h2 className="text-[32px] leading-[1.2] font-bold text-[#181c2c] mb-2 relative z-10" style={{ fontFamily: "var(--font-display), sans-serif" }}>The Editor</h2>
-                <p className="text-[16px] leading-normal text-[#46464c] mb-6 relative z-10" style={{ fontFamily: "var(--font-body), sans-serif" }}>
-                  Video &amp; Photo Design. Explore my visual storytelling, editing reels, and photography.
-                </p>
-                <div className="mt-auto relative z-10">
-                  <span className="inline-block px-4 py-2 bg-[#f1eee4] text-[14px] text-[#181c2c] border border-[#c7c6cd] rotate-sm" style={{ fontFamily: "var(--font-mono), monospace" }}>
-                    View Reel -&gt;
-                  </span>
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          <div className="mt-8 text-center rotate-sm">
-            <p className="text-[20px] leading-[1.2] text-[#77767d]" style={{ fontFamily: "var(--font-accent), sans-serif" }}>
-              Just browsing? <Link className="text-[#181c2c] underline decoration-[#ae2f34] decoration-2 transition-colors hover:text-[#ae2f34]" href="/tech">Go to the full index</Link>
-            </p>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
     </main>
   );
