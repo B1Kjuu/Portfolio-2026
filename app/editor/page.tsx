@@ -179,7 +179,7 @@ export default function EditorPage() {
     updateTime();
     const interval = setInterval(updateTime, 60_000);
 
-const initialWins = editorProjects.reduce((acc, project, index) => {
+    const initialWins = editorProjects.reduce((acc, project, index) => {
       const id = `file-${index}`;
       acc[id] = {
         id,
@@ -197,7 +197,6 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
         items: (project as any).items || [],
       };
 
-      // Register folder sub-files with individual video IDs so they can have independent popup players
       if ((project as any).type === "folder" && (project as any).items) {
         (project as any).items.forEach((subItem: any, subIdx: number) => {
           const subId = `sub-${index}-${subIdx}`;
@@ -221,7 +220,7 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
       return acc;
     }, {} as Record<string, DesktopWindow>);
 
-    // Add portfolio windows
+    // Added type: "system" so the app knows to render a text document layout!
     initialWins["about"] = {
       id: "about",
       title: "About Me",
@@ -233,6 +232,7 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
       zIndex: 10,
       x: 140,
       y: 120,
+      type: "system",
     };
     initialWins["resume"] = {
       id: "resume",
@@ -245,6 +245,7 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
       zIndex: 10,
       x: 160,
       y: 140,
+      type: "system",
     };
     initialWins["skills"] = {
       id: "skills",
@@ -257,6 +258,7 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
       zIndex: 10,
       x: 180,
       y: 160,
+      type: "system",
     };
     initialWins["contact"] = {
       id: "contact",
@@ -269,6 +271,7 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
       zIndex: 10,
       x: 200,
       y: 180,
+      type: "system",
     };
 
     setWindows(initialWins);
@@ -378,6 +381,10 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
   }, [sheetDragging]);
 
   const openWin = (id: string) => {
+    if (!windows[id]) {
+      console.warn(`Folder ${id} does not exist in your lib/content.ts data yet!`);
+      return;
+    } 
     const nextZ = winTopZ + 1;
     setWinTopZ(nextZ);
     setWindows((prev) => ({
@@ -442,7 +449,6 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
     mobileExitTimerRef.current = window.setTimeout(() => router.replace("/#explore"), 960);
   };
 
-  // Switch display arrays conditionally if a folder container sub-layer is open on mobile
   const activeMobileGridItems = currentMobileFolder ? currentMobileFolder.items || [] : editorProjects;
 
   const mobileApps: MobileApp[] = activeMobileGridItems.map((project: any, index: number) => ({
@@ -471,17 +477,17 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
     { label: "Resume" },
     { label: "Skills" },
     { label: "Contact" },
-    { label: "Open Portfolio..." },
+    { label: "Open Tech Portfolio..." },
     { label: "Shut Down Portfolio..." },
   ];
 
   const programMenuItems = [
-    { label: "Featured Reel" },
-    { label: "Portrait Series" },
-    { label: "Promo Story Pack" },
-    { label: "Project Archive" },
-    { label: "Resume PDF" },
-    { label: "Portfolio Explorer" },
+    { label: "Featured Reel", target: "file-0" },
+    { label: "Portrait Series", target: "file-1" },
+    { label: "Promo Story Pack", target: "file-2" },
+    { label: "Project Archive", target: "file-3" },
+    { label: "Long Form Videos", target: "file-4" },
+    { label: "Video Explorer", target: "file-5" },
   ];
 
   const openProgramMenu = () => {
@@ -499,10 +505,9 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
     startMenuHoverTimer.current = window.setTimeout(() => {
       setStartMenuHover(null);
       startMenuHoverTimer.current = null;
-    }, 120);
+    }, 300);
   };
 
-  // Close start menu when clicking outside
   useEffect(() => {
     const handleDocClick = (e: MouseEvent) => {
       if (!isStartMenuOpen) return;
@@ -516,7 +521,6 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
     return () => document.removeEventListener("mousedown", handleDocClick);
   }, [isStartMenuOpen]);
 
-  // Window drag handlers
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
       const d = dragRef.current;
@@ -901,14 +905,14 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
                   <div className="pointer-events-auto relative mx-auto w-full max-w-180">
                     {Object.values(windows)
                         .filter((win) => win.isOpen)
-                        .map((win) => {
+                        .map((win, idx) => {
                           const isActive = win.zIndex === Math.max(...Object.values(windows).map((item) => item.zIndex));
                           const left = typeof win.x === 'number' ? win.x : Math.max(40, window.innerWidth / 2 - 430);
                           const top = typeof win.y === 'number' ? win.y : 28;
 
                           return (
                             <Window
-                              key={win.id}
+                              key={`${win.id}-${idx}`}
                               style={{
                                 position: "absolute",
                                 left,
@@ -930,7 +934,7 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
                                   dragRef.current = { id: win.id, startX: e.clientX, startY: e.clientY, startLeft: left, startTop: top };
                                 }}
                               >
-                                <span className="truncate text-[12px]">{win.title} - {win.type === "folder" ? "File Explorer" : "Windows Media Player"}</span>
+                                <span className="truncate text-[12px]">{win.title} - {win.type === "folder" ? "File Explorer" : win.type === "system" ? "Document Viewer" : "Windows Media Player"}</span>
                                 <div className="flex items-center gap-1">
                                   <Button size="sm" onPointerDown={(e) => e.stopPropagation()} onClick={() => setWindows((prev) => ({ ...prev, [win.id]: { ...prev[win.id], isMaximized: !prev[win.id].isMaximized } }))}>
                                     {win.isMaximized ? "🗗" : "🗖"}
@@ -942,37 +946,240 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
                               </WindowHeader>
 
                               <WindowContent className="bg-[#c0c0c0] p-3 h-[calc(100%-32px)]">
-                                {/* DYNAMIC SUB-VIEW BRANCH: CHOOSE FOLDER ICON LIST vs MEDIA PLAYER VIEW */}
-                                {win.type === "folder" ? (
-                                  <div 
-                                    style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080', minHeight: '380px', padding: '16px' }} 
-                                    className="grid grid-cols-4 gap-6 content-start overflow-y-auto shadow-inner font-sans h-full"
-                                  >
-                                    {win.items && win.items.map((subItem: any, subIdx: number) => {
-                                      // Dynamically parse target matching ID registered in original initialization loop
-                                      const mappedSubId = `sub-${win.id.split('-')[1]}-${subIdx}`;
-                                      return (
-                                        <div
-                                          key={subIdx}
-                                          onClick={() => openWin(mappedSubId)}
-                                          className="flex flex-col items-center justify-center p-2 cursor-pointer hover:bg-[#000080]/10 border border-transparent hover:border-black/10 rounded-sm group text-center"
-                                        >
-                                          <div className="text-4xl mb-2 filter drop-shadow-sm group-active:scale-95 transition-transform">🎬</div>
-                                          <span className="text-[11px] text-black leading-tight truncate max-w-full font-medium">
-                                            {subItem.title.replace(/\s+/g, "_")}.exe
-                                          </span>
-                                        </div>
-                                      );
-                                    })}
+                                
+                                {/* DYNAMIC SUB-VIEW BRANCH: CHOOSE FOLDER ICON LIST vs SYSTEM APP vs MEDIA PLAYER VIEW */}
+                                {win.type === "system" ? (
+                                    /* --- SYSTEM APPLICATION VIEW --- */
+                                <div
+                                  style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080' }}
+                                  className="h-full min-h-95 overflow-y-auto font-mono text-black"
+                                >
+                                  {/* Shared terminal path header */}
+                                  <div style={{ background: '#000080', color: '#fff', fontSize: '11px', padding: '2px 8px', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
+                                    C:\PORTFOLIO\{win.id.toUpperCase()}.EXE&nbsp;
+                                    <span className="animate-pulse">_</span>
                                   </div>
+
+                                  <div className="p-4">
+
+                                    {/* ── ABOUT ── */}
+                                    {win.id === "about" && (
+                                      <div className="space-y-4">
+                                        <div className="flex gap-3 items-start">
+                                          <div
+                                            style={{ background: '#000080', border: '2px solid', borderColor: '#fff #808080 #808080 #fff', width: 64, height: 64, flexShrink: 0 }}
+                                            className="flex items-center justify-center text-3xl"
+                                          >
+                                            🧑‍💻
+                                          </div>
+                                          <div>
+                                            <h2 style={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 'bold', color: '#000080', margin: '0 0 2px' }}>
+                                              JOEBECK ANDREW F. GUSI
+                                            </h2>
+                                            <p style={{ fontSize: 10, color: '#808080', margin: '0 0 4px' }}>
+                                              Computer Engineer · Video Editor · Manila, PH
+                                            </p>
+                                            <div
+                                              style={{ display: 'inline-block', background: '#c0c0c0', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '1px 8px', fontSize: 10, color: '#000080' }}
+                                            >
+                                              ● ONLINE
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div
+                                          style={{ background: '#f8f8f8', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '8px 10px', fontSize: 11, lineHeight: 1.7 }}
+                                        >
+                                          I bridge the gap between{' '}
+                                          <span style={{ color: '#000080', fontWeight: 'bold' }}>tactile hardware</span> and{' '}
+                                          <span style={{ color: '#800000', fontWeight: 'bold' }}>high-retention digital experiences</span>.
+                                          Computer Engineering student specializing in frontend dev and embedded IoT systems.
+                                          <br /><br />
+                                          Beyond code, I'm a proficient video editor in DaVinci Resolve — documentary storytelling,
+                                          complex VFX. Avid hiker & mountaineer, which directly inspires my safety-focused engineering.
+                                        </div>
+
+                                        <div style={{ background: '#ffffe1', borderLeft: '3px solid #ff0000', border: '1px solid #c0c0c0', padding: '6px 8px', fontSize: 10 }}>
+                                          <span style={{ color: '#ff0000', fontWeight: 'bold' }}>SYS NOTE:</span>{' '}
+                                          This portfolio runs on React + Next.js. All video assets streamed via Azure Blob Storage.
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* ── RESUME ── */}
+                                    {win.id === "resume" && (
+                                      <div className="space-y-3">
+                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace' }}>
+                                          ▶ EXPERIENCE
+                                        </div>
+                                        <div style={{ borderLeft: '3px solid #000080', padding: '4px 8px', background: '#f8f8f8', marginBottom: 8 }}>
+                                          <p style={{ margin: '0 0 2px', fontSize: 12, fontWeight: 'bold', color: '#000080' }}>Freelance Developer/Editor</p>
+                                          <p style={{ margin: '0 0 4px', fontSize: 10, color: '#808080' }}>2023 – Today </p>
+                                          <ul style={{ margin: 0, paddingLeft: 14, fontSize: 10, color: '#333', lineHeight: 1.6 }}>
+                                            <li>Front-End and Website Developer</li>
+                                            <li>Video Editing</li>
+                                          </ul>
+                                        </div>
+
+                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginTop: 8 }}>
+                                          ▶ NOTABLE PROJECTS
+                                        </div>
+
+                                        {[
+                                          { title: 'HikeSafe', year: '2026', desc: 'Emergency messaging via LoRa + GPS for signal-dead zones.' },
+                                          { title: 'P3KCARS', year: '2025', desc: 'Responsive public website with polished user-facing experience.' },
+                                          { title: 'ResortifyPH', year: '2025', desc: 'Full-pledged website inspired from Airbnb.' },
+                                        ].map((proj) => (
+                                          <div key={proj.title} style={{ borderLeft: '3px solid #000080', padding: '4px 8px', background: '#f8f8f8', marginBottom: 6 }}>
+                                            <p style={{ margin: '0 0 2px', fontSize: 12, fontWeight: 'bold', color: '#000080' }}>
+                                              {proj.title} <span style={{ color: '#808080', fontWeight: 'normal' }}>({proj.year})</span>
+                                            </p>
+                                            <p style={{ margin: 0, fontSize: 10, color: '#333' }}>{proj.desc}</p>
+                                          </div>
+                                        ))}
+
+                                        <button
+                                          type="button"
+                                          onClick={() => window.open('/CV_GUSI.pdf', '_blank')}
+                                          style={{ marginTop: 8, padding: '4px 12px', fontSize: 11, fontFamily: 'monospace', cursor: 'pointer', background: '#c0c0c0', border: '2px solid', borderColor: '#fff #808080 #808080 #fff' }}
+                                        >
+                                          📂 Open Full PDF Resume
+                                        </button>
+                                      </div>
+                                    )}
+
+                                    {/* ── SKILLS ── */}
+                                    {win.id === "skills" && (
+                                      <div className="space-y-3">
+                                        {[
+                                          {
+                                            label: '▶ WEB DEVELOPMENT',
+                                            color: '#000080',
+                                            skills: [
+                                              { name: 'React / Next.js', pct: 90 },
+                                              { name: 'TypeScript', pct: 82 },
+                                              { name: 'Tailwind CSS', pct: 88 },
+                                              { name: 'Node.js', pct: 75 },
+                                              { name: 'Shopify Liquid', pct: 70 },
+                                            ],
+                                            barColor: 'repeating-linear-gradient(90deg,#000080 0px,#000080 6px,#1084d0 6px,#1084d0 12px)',
+                                          },
+                                          {
+                                            label: '▶ VIDEO & MEDIA',
+                                            color: '#800000',
+                                            skills: [
+                                              { name: 'DaVinci Resolve', pct: 92 },
+                                              { name: 'Fusion Nodes', pct: 80 },
+                                              { name: '3D Camera Tracking', pct: 70 },
+                                              { name: 'Retention Editing', pct: 88 },
+                                            ],
+                                            barColor: 'repeating-linear-gradient(90deg,#800000 0px,#800000 6px,#c04040 6px,#c04040 12px)',
+                                          },
+                                          {
+                                            label: '▶ HARDWARE & IOT',
+                                            color: '#006000',
+                                            skills: [
+                                              { name: 'ESP32 / ESP8266', pct: 85 },
+                                              { name: 'LoRa / GPS', pct: 78 },
+                                              { name: 'Firebase', pct: 80 },
+                                            ],
+                                            barColor: 'repeating-linear-gradient(90deg,#006000 0px,#006000 6px,#40a040 6px,#40a040 12px)',
+                                          },
+                                        ].map((section) => (
+                                          <div key={section.label}>
+                                            <div style={{ background: section.color, color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginBottom: 6 }}>
+                                              {section.label}
+                                            </div>
+                                            {section.skills.map((skill) => (
+                                              <div key={skill.name} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, fontSize: 10 }}>
+                                                <span style={{ width: 130, flexShrink: 0 }}>{skill.name}</span>
+                                                <div style={{ flex: 1, height: 12, background: '#808080', border: '1px solid #606060', overflow: 'hidden' }}>
+                                                  <div style={{ height: '100%', width: `${skill.pct}%`, background: section.barColor }} />
+                                                </div>
+                                                <span style={{ width: 28, textAlign: 'right' }}>{skill.pct}%</span>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+
+                                    {/* ── CONTACT ── */}
+                                    {win.id === "contact" && (
+                                      <div className="space-y-3">
+                                        <div
+                                          style={{ background: '#f8f8f8', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '4px 8px', fontSize: 10, color: '#808080', fontStyle: 'italic' }}
+                                        >
+                                          C:\USERS\JOEBECK\CONTACT_INFO.txt <span className="animate-pulse">_</span>
+                                        </div>
+
+                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace' }}>
+                                          ▶ NETWORK ADDRESSES
+                                        </div>
+
+                                        {[
+                                          { label: 'LOCATION', value: 'Manila, Philippines' },
+                                          { label: 'EMAIL', value: 'joebeckgusi25@gmail.com' },
+                                          { label: 'LINKEDIN', value: 'www.linkedin.com/in/gusi-joebeck-andrew' },
+                                          { label: 'GITHUB', value: 'https://github.com/B1Kjuu' },
+                                          { label: 'FACEBOOK', value: 'https://www.facebook.com/b1kjuu' },
+                                        ].map((field) => (
+                                          <div key={field.label} style={{ marginBottom: 6 }}>
+                                            <p style={{ margin: '0 0 2px', fontSize: 10, color: '#444' }}>{field.label}</p>
+                                            <div style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '3px 8px', fontSize: 11, fontFamily: 'monospace' }}>
+                                              {field.value}
+                                            </div>
+                                          </div>
+                                        ))}
+
+                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginTop: 8 }}>
+                                          ▶ SEND MESSAGE
+                                        </div>
+
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                          <input
+                                            type="text"
+                                            placeholder="Your name..."
+                                            style={{ fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', border: '2px solid', borderColor: '#808080 #fff #fff #808080', background: '#fff', width: '100%', boxSizing: 'border-box' as const }}
+                                          />
+                                          <textarea
+                                            placeholder="Your message..."
+                                            rows={3}
+                                            style={{ fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', border: '2px solid', borderColor: '#808080 #fff #fff #808080', background: '#fff', width: '100%', boxSizing: 'border-box' as const, resize: 'none' }}
+                                          />
+                                          <button
+                                            type="button"
+                                            style={{ alignSelf: 'flex-start', padding: '4px 12px', fontSize: 11, fontFamily: 'monospace', cursor: 'pointer', background: '#c0c0c0', border: '2px solid', borderColor: '#fff #808080 #808080 #fff' }}
+                                          >
+                                            Send via TCP/IP
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
+
+                                  </div>
+                                </div>
+
+
                                 ) : (
+                                  
+                                  /* --- MEDIA PLAYER VIEW --- */
                                   <div className="flex gap-4 h-full min-h-95">
-                                    {/* Left: Sleek Black Media Player (Perfect for vertical videos) */}
+                                    {/* Left: Sleek Black Media Player */}
                                     <div className="flex-1 bg-black border-2 border-gray-400 border-t-gray-800 border-l-gray-800 relative flex items-center justify-center">
                                       {win.videoUrl ? (
-                                        <video src={win.videoUrl} controls autoPlay playsInline className="absolute inset-0 w-full h-full object-contain" />
+                                        <video 
+                                          key={win.videoUrl}
+                                          src={win.videoUrl} 
+                                          controls 
+                                          autoPlay 
+                                          playsInline 
+                                          preload="auto"
+                                          className="absolute inset-0 w-full h-full object-contain pointer-events-auto select-auto" 
+                                          onPointerDown={(e) => e.stopPropagation()}
+                                        />
                                       ) : (
-                                        <div className="text-white text-xs">System Application</div>
+                                        <div className="text-white text-xs">Media File Not Found</div>
                                       )}
                                     </div>
 
@@ -991,8 +1198,9 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
                                   </div>
                                 )}
 
+                                {/* STATUS BAR */}
                                 <div className="mt-3 flex items-center justify-between text-[11px] font-bold">
-                                  <span>▶ Loading Stream Pipeline...</span>
+                                  <span>▶ {win.type === "system" ? "System Ready" : "Loading Stream Pipeline..."}</span>
                                   <span>{currentTime}</span>
                                 </div>
                               </WindowContent>
@@ -1048,8 +1256,8 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
                                       openProgramMenu();
                                       return;
                                     }
-                                    if (item.label === "Open Portfolio...") {
-                                      window.location.href = '/';
+                                    if (item.label === "Open Tech Portfolio...") {
+                                      window.location.href = '/tech';
                                       return;
                                     }
                                     if (item.label === "Shut Down Portfolio...") {
@@ -1083,15 +1291,16 @@ const initialWins = editorProjects.reduce((acc, project, index) => {
                               Programs
                             </div>
                             <div className="flex flex-col gap-0.5 p-1">
-                              {programMenuItems.map((item, index) => (
+                              {programMenuItems.map((item) => (
                                 <button
                                   key={item.label}
                                   type="button"
-                                  onClick={() => {
-                                    if (index < editorProjects.length) {
-                                      openWin(`file-${index}`);
-                                    } else if (item.label === 'Resume PDF') {
+                                  onMouseDown={() => {
+                                    if (item.label === 'Resume PDF') {
                                       window.open('/CV_GUSI.pdf', '_blank');
+                                    }
+                                    else if (item.target) {
+                                      openWin(item.target);
                                     }
                                     setIsStartMenuOpen(false);
                                     setStartMenuHover(null);

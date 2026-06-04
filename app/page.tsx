@@ -162,7 +162,7 @@ export default function HomePage() {
     <main className="min-h-screen overflow-x-hidden bg-[#fdf9ef] text-[#1c1c16]">
       
       {/* --- NEW WELCOME HERO SCREEN --- */}
-      <section id="home" className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center px-6 text-center bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-[size:20px_20px]">
+      <section id="home" className="relative flex min-h-dvh w-full flex-col items-center justify-center px-6 text-center bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-size-[20px_20px]">
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           
           <div className="mb-6 inline-block rotate-2 bg-[#f1eee4] px-4 py-1 border border-[#c7c6cd] shadow-sm">
@@ -202,7 +202,7 @@ export default function HomePage() {
         
         {/* Mobile Layout */}
         <div className="md:hidden">
-          <div className="min-h-[100dvh] bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-[size:20px_20px] px-6 py-12 flex flex-col justify-center">
+          <div className="min-h-dvh bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-[size-[20px_20px] px-6 py-12 flex flex-col justify-center">
             <section className="mx-auto flex w-full max-w-sm flex-col items-center justify-center gap-6">
               <header className="relative z-10 mb-2 w-full text-center">
                 <h2 className="mb-3 text-[36px] font-extrabold leading-[1.1] text-[#181c2c]" style={{ fontFamily: "var(--font-display), sans-serif" }}>
@@ -252,7 +252,7 @@ export default function HomePage() {
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden md:flex min-h-screen items-center justify-center p-4 text-[#1c1c16] bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-[size:20px_20px]">
+        <div className="hidden md:flex min-h-screen items-center justify-center p-4 text-[#1c1c16] bg-[linear-gradient(#ece8de_1px,transparent_1px),linear-gradient(90deg,#ece8de_1px,transparent_1px)] bg-size-[20px_20px]">
           <main className="w-full max-w-5xl mx-auto flex flex-col items-center gap-12 relative z-10">
             <div className="text-center space-y-4 max-w-2xl mx-auto relative rotate-sm-neg">
               <div className="absolute -top-6 -left-8 w-16 h-16 opacity-50 text-[#ae2f34] pointer-events-none">
@@ -302,7 +302,7 @@ export default function HomePage() {
 
               <Link href="/editor" className="group relative block w-full cursor-pointer transition-transform duration-300 hover:-translate-y-2 focus:outline-none md:w-1/2 max-w-md mx-auto">
                 <div className="absolute -top-3 -left-3 w-20 h-6 bg-[rgba(255,107,107,0.6)] rotate-[1.5deg] border border-black/5 z-20 shadow-sm backdrop-blur-sm" />
-                <div className="bg-[#ffffff] shadow-[4px_4px_0_0_rgba(174,47,52,0.2)] -rotate-[0.5deg] border border-[#c7c6cd] p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:border-[#ae2f34] group-focus:ring-4 ring-[#ffb3b0] ring-offset-2 ring-offset-[#fdf9ef]">
+                <div className="bg-[#ffffff] shadow-[4px_4px_0_0_rgba(174,47,52,0.2)] rotate-[0.5deg] border border-[#c7c6cd] p-6 h-full flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:border-[#ae2f34] group-focus:ring-4 ring-[#ffb3b0] ring-offset-2 ring-offset-[#fdf9ef]">
                   <div className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none text-[#2d3142] rotate-90 scale-150">
                     <MovieRoundedIcon sx={{ fontSize: 180 }} />
                   </div>
