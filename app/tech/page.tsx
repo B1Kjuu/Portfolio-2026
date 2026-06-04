@@ -23,7 +23,7 @@ import postmanIcon from "./techicons/Postman.svg";
 import nodeIcon from "./techicons/Node.svg";
 import pythonIcon from "./techicons/Python.svg";
 import reactIcon from "./techicons/React.svg";
-import CSharpIcon from "./techicons/C#.svg";
+import CSharpIcon from "./techicons/Csharp.svg";
 import redisIcon from "./techicons/Redis.svg";
 import reduxIcon from "./techicons/Redux.svg";
 import sqlIcon from "./techicons/SQL.svg";
@@ -50,7 +50,7 @@ function getExternalIcon(label: string) {
     case "c++":
       return "https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg";
     case "c#":
-      return "https://upload.wikimedia.org/wikipedia/commons/7/7a/C_Sharp_logo.svg";
+      return "null";
     case "mysql":
       return "https://upload.wikimedia.org/wikipedia/en/d/dd/MySQL_logo.svg";
     case "arduino":
@@ -212,7 +212,7 @@ export default function TechPage() {
 
             <div className="mt-4 flex items-center justify-between text-[11px] text-[#77767d]">
               <span>Initializing layout</span>
-              <span>Match theme</span>
+              <span>Loading...</span>
             </div>
           </div>
         </div>

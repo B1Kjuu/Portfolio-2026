@@ -13,6 +13,8 @@ import { WindowHeader } from "react95/dist/Window/WindowHeader";
 import styleReset from "react95/dist/common/styleReset";
 import original from "react95/dist/themes/original";
 import { createGlobalStyle, ThemeProvider, StyleSheetManager } from "styled-components";
+
+// -- Tech & App Icons --
 import chromeIcon from "../tech/techicons/Google Chrome.svg";
 import gitIcon from "../tech/techicons/Git.svg";
 import nextIcon from "../tech/techicons/Next.svg";
@@ -24,11 +26,20 @@ import vscodeIcon from "../tech/techicons/vscode.svg";
 import winDisplay from "../tech/techicons/win95DisplayMini.png";
 import winFolder from "../tech/techicons/win95Folder.png";
 
+// -- MUI Icons --
+import FolderRoundedIcon from "@mui/icons-material/FolderRounded";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import MovieRoundedIcon from "@mui/icons-material/MovieRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
+
 type ProjectState = {
+  id?: string;
   title: string;
   description: string;
   note: string;
-  videoUrl: string;
+  videoUrl?: string;
+  type?: "folder" | "video" | "system";
 };
 
 type DesktopWindow = {
@@ -58,7 +69,15 @@ type MobileApp = {
 };
 
 const appIcons = [reactIcon, nextIcon, typescriptIcon, tailwindIcon, nodeIcon, gitIcon, chromeIcon, vscodeIcon];
-const dockIcons = [chromeIcon, vscodeIcon, reactIcon, nextIcon];
+
+// Functional Mobile Dock Apps mapping
+const mobileDockApps = [
+  { id: "about", title: "About Me", description: "Computer Engineer · Video Editor · Manila, PH", note: "Developer Profile", type: "system" as const, icon: chromeIcon },
+  { id: "resume", title: "Resume", description: "Freelance Developer & Video Editor (2023 - Today)", note: "Curriculum Vitae", type: "system" as const, icon: vscodeIcon },
+  { id: "skills", title: "Skills", description: "React.js, Next.js, DaVinci Resolve, ESP32, Firebase", note: "Technical Arsenal", type: "system" as const, icon: reactIcon },
+  { id: "contact", title: "Contact", description: "joebeckgusi25@gmail.com | Manila, PH", note: "Network details", type: "system" as const, icon: nextIcon }
+];
+
 const BIOS_MEMORY_MAX = 131072;
 const BIOS_MEMORY_STEP = 4096;
 const BIOS_MEMORY_INTERVAL_MS = 42;
@@ -382,7 +401,7 @@ export default function EditorPage() {
 
   const openWin = (id: string) => {
     if (!windows[id]) {
-      console.warn(`Folder ${id} does not exist in your lib/content.ts data yet!`);
+      console.warn(`System Data: Folder ${id} does not exist in your lib/content.ts data yet!`);
       return;
     } 
     const nextZ = winTopZ + 1;
@@ -482,12 +501,12 @@ export default function EditorPage() {
   ];
 
   const programMenuItems = [
-    { label: "Featured Reel", target: "file-0" },
-    { label: "Portrait Series", target: "file-1" },
-    { label: "Promo Story Pack", target: "file-2" },
-    { label: "Project Archive", target: "file-3" },
-    { label: "Long Form Videos", target: "file-4" },
-    { label: "Video Explorer", target: "file-5" },
+    { label: "Featured Reel", icon: winDisplay, target: "file-0" },
+    { label: "Portrait Series", icon: winFolder, target: "file-1" },
+    { label: "Promo Story Pack", icon: winFolder, target: "file-2" },
+    { label: "Project Archive", icon: winDisplay, target: "file-3" },
+    { label: "Long Form Videos", icon: winFolder, target: "file-4" },
+    { label: "Video Explorer", icon: winFolder, target: "file-5" },
   ];
 
   const openProgramMenu = () => {
@@ -718,6 +737,7 @@ export default function EditorPage() {
               <div className="relative z-10 flex h-full flex-col">
                 <div className="flex-1 overflow-y-auto px-4 pb-44 pt-14">
                   <div className="grid grid-cols-4 gap-x-3 gap-y-6">
+                    
                     {/* iOS Subdirectory Go-Back Arrow */}
                     {currentMobileFolder && (
                       <button
@@ -725,10 +745,10 @@ export default function EditorPage() {
                         onClick={() => setCurrentMobileFolder(null)}
                         className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
                       >
-                        <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/20 p-1.5 shadow-[0_10px_20px_-9px_rgba(0,0,0,0.7)] ring-1 ring-white/30 backdrop-blur-md text-2xl">
-                          ⬅️
+                        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white p-2 shadow-sm ring-1 ring-black/5">
+                          <ArrowBackRoundedIcon sx={{ fontSize: 28, color: '#181c2c' }} />
                         </span>
-                        <span className="w-full px-0.5 text-center text-[11px] leading-[1.2] text-white font-medium" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.65)" }}>
+                        <span className="w-full px-0.5 mt-1.5 text-center text-[11px] leading-[1.2] text-white font-medium" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.65)" }}>
                           Go Back
                         </span>
                       </button>
@@ -747,39 +767,46 @@ export default function EditorPage() {
                               description: app.description,
                               note: app.note,
                               videoUrl: app.videoUrl,
+                              type: app.type
                             });
                           }
                         }}
                         className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
                       >
                         <span className={`flex h-14 w-14 items-center justify-center rounded-xl p-1.5 shadow-[0_10px_20px_-9px_rgba(0,0,0,0.7)] ring-1 ring-white/18 backdrop-blur-sm
-                          ${app.type === "folder" ? "bg-linear-to-b from-[#8ab4f8] to-[#0055ff] text-2xl" : "bg-white/12"}`}
+                          ${app.type === "folder" ? "bg-linear-to-b from-[#8ab4f8] to-[#0055ff] text-white" : "bg-white/12"}`}
                         >
-                          {app.type === "folder" ? "📁" : (
+                          {app.type === "folder" ? <FolderRoundedIcon sx={{ fontSize: 32 }} /> : (
                             <Image
                               src={app.icon}
                               alt={`${app.title} icon`}
                               width={46}
                               height={46}
-                              className="h-10 w-10 rounded-2xl"
+                              className="h-full w-full object-contain"
                             />
                           )}
                         </span>
-                        <span className="w-full px-0.5 text-center text-[11px] leading-[1.2] text-white line-clamp-2" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.65)" }}>
-                          {index === 0 && !currentMobileFolder ? "Project 1" : app.title}
+                        <span className="w-full px-0.5 mt-1 text-center text-[11px] leading-[1.2] text-white line-clamp-2" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.65)" }}>
+                          {app.title}
                         </span>
                       </button>
                     ))}
                   </div>
                 </div>
 
+                {/* BOTTOM DOCK (NOW FUNCTIONAL) */}
                 <div className="absolute bottom-4 left-4 right-4 z-20">
                   <div className="rounded-2xl border border-white/14 bg-white/18 px-3 py-2 shadow-[0_18px_35px_-22px_rgba(0,0,0,0.85)] backdrop-blur-xl">
                     <div className="flex items-center justify-around gap-2">
-                      {dockIcons.map((icon, index) => (
-                        <span key={index} className="flex h-13 w-13 items-center justify-center rounded-xl bg-white/80 p-1.5 shadow-[0_10px_18px_-12px_rgba(0,0,0,0.7)]">
-                          <Image src={icon} alt="Dock app" width={42} height={42} className="h-9 w-9 rounded-[10px]" />
-                        </span>
+                      {mobileDockApps.map((app, index) => (
+                        <button 
+                          key={index}
+                          type="button"
+                          onClick={() => setActiveMobileProject(app)}
+                          className="flex h-13 w-13 items-center justify-center rounded-xl bg-white/80 p-1.5 shadow-[0_10px_18px_-12px_rgba(0,0,0,0.7)] active:scale-95 transition-transform"
+                        >
+                          <Image src={app.icon} alt={app.title} width={42} height={42} className="h-9 w-9 rounded-[10px]" />
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -830,8 +857,124 @@ export default function EditorPage() {
                           </button>
                         </div>
 
-                        <div className="bg-black">
-                          {activeMobileProject.videoUrl ? (
+                        {/* DYNAMIC RENDERER: System Text vs Video Player */}
+                        <div className={activeMobileProject.type === "system" ? "bg-white p-5 text-black" : "bg-black"}>
+                          {activeMobileProject.type === "system" ? (
+                            <div className="h-[44vh] overflow-y-auto pb-8">
+                               {activeMobileProject.id === "about" && (
+                                <div className="space-y-3">
+                                  <h3 className="font-bold text-xl text-[#000080]">Joebeck Andrew F. Gusi</h3>
+                                  <p className="text-xs text-gray-600 font-bold border-b pb-2">Computer Engineer · Video Editor · Manila, PH</p>
+                                  <p className="text-sm leading-relaxed text-gray-800">
+                                    I bridge the gap between tactile hardware and high-retention digital experiences.
+                                    Beyond code, I'm a proficient video editor in DaVinci Resolve utilizing documentary storytelling and complex VFX.
+                                  </p>
+                                </div>
+                              )}
+                              {activeMobileProject.id === "resume" && (
+                                <div className="space-y-3">
+                                  <h3 className="font-bold text-xl text-[#000080]">Experience</h3>
+                                  <div className="border-l-4 border-[#000080] pl-3 py-1 bg-gray-50">
+                                    <p className="font-bold text-sm">Freelance Developer/Editor</p>
+                                    <p className="text-xs text-gray-500">2023 – Today</p>
+                                  </div>
+                                  <div className="border-l-4 border-[#000080] pl-3 py-1 bg-gray-50 mt-2">
+                                    <p className="font-bold text-sm">Front-End Developer</p>
+                                    <p className="text-xs text-gray-500">8box Solutions Inc. (2025)</p>
+                                  </div>
+                                  <button onClick={() => window.open('/CV_GUSI.pdf', '_blank')} className="mt-4 w-full text-sm font-bold bg-[#e6e6eb] text-[#007aff] px-4 py-3 rounded-xl active:scale-95 transition-transform flex items-center justify-center">
+                                    <PictureAsPdfRoundedIcon sx={{ fontSize: 20, mr: 1, color: '#800000' }} /> Open Full PDF Resume
+                                  </button>
+                                </div>
+                              )}
+                              {activeMobileProject.id === "skills" && (
+                                <div className="space-y-4">
+                                  <div>
+                                    <h3 className="font-bold text-sm text-[#000080] mb-1">Editing Software</h3>
+                                  <p className="text-xs text-gray-700 bg-gray-100 p-2 rounded-lg">
+                                    DaVinci Resolve, CapCut Desktop, After Effects, Fusion
+                                  </p>
+                                  </div>
+
+                                  <div>
+                                    <h3 className="font-bold text-sm text-[#800000] mb-1">Effects & Motion Design</h3>
+                                    <p className="text-xs text-gray-700 bg-gray-100 p-2 rounded-lg">
+                                      Motion Graphics, Velocity Edits, Transitions, 3D Camera Tracking, VFX
+                                    </p>
+                                  </div>
+
+                                  <div>
+                                    <h3 className="font-bold text-sm text-[#006000] mb-1">Content Creation</h3>
+                                    <p className="text-xs text-gray-700 bg-gray-100 p-2 rounded-lg">
+                                      Retention Editing, TikTok & Reels, YouTube Videos, Gaming Montages, Cinematic Storytelling
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              {activeMobileProject.id === "contact" && (
+                                <div className="space-y-3">
+                                  <h3 className="font-bold text-xl text-[#000080] mb-2">Get in Touch (Click to redirect)</h3>
+                                  <div className="bg-gray-100 p-3 rounded-xl space-y-2">
+                                   <p className="text-sm">
+                                    <strong>Email:</strong>
+                                    <br />
+                                    <a
+                                      href="mailto:joebeckgusi25@gmail.com"
+                                      className="text-blue-600 hover:underline"
+                                    >
+                                      joebeckgusi25@gmail.com
+                                    </a>
+                                  </p>
+
+                                  <p className="text-sm">
+                                    <strong>Location:</strong>
+                                    <br />
+                                    Manila, Philippines
+                                  </p>
+
+                                  <p className="text-sm">
+                                    <strong>GitHub:</strong>
+                                    <br />
+                                    <a
+                                      href="https://github.com/B1Kjuu"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline"
+                                    >
+                                      B1Kjuu
+                                    </a>
+                                  </p>
+
+                                  <p className="text-sm">
+                                    <strong>LinkedIn:</strong>
+                                    <br />
+                                    <a
+                                      href="https://www.linkedin.com/in/gusi-joebeck-andrew"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline"
+                                    >
+                                      Joebeck Andrew Gusi
+                                    </a>
+                                  </p>
+
+                                  <p className="text-sm">
+                                    <strong>Facebook:</strong>
+                                    <br />
+                                    <a
+                                      href="https://www.facebook.com/b1kjuu"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 hover:underline"
+                                    >
+                                      Joebeck Andrew Fajardo Gusi
+                                    </a>
+                                  </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : activeMobileProject.videoUrl ? (
                             <video
                               key={activeMobileProject.videoUrl}
                               src={activeMobileProject.videoUrl}
@@ -849,12 +992,14 @@ export default function EditorPage() {
                           )}
                         </div>
 
-                        <div className="max-h-[24vh] overflow-y-auto px-4 py-4">
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a8a91]">Project Details</p>
-                          <p className="mt-2 rounded-2xl border border-[#e0e0e5] bg-white px-3 py-3 text-[13px] leading-relaxed text-[#333] shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-                            {activeMobileProject.description}
-                          </p>
-                        </div>
+                        {activeMobileProject.type !== "system" && (
+                          <div className="max-h-[24vh] overflow-y-auto px-4 py-4">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a8a91]">Project Details</p>
+                            <p className="mt-2 rounded-2xl border border-[#e0e0e5] bg-white px-3 py-3 text-[13px] leading-relaxed text-[#333] shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+                              {activeMobileProject.description}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ) : null}
@@ -947,241 +1092,270 @@ export default function EditorPage() {
 
                               <WindowContent className="bg-[#c0c0c0] p-3 h-[calc(100%-32px)]">
                                 
-                                {/* DYNAMIC SUB-VIEW BRANCH: CHOOSE FOLDER ICON LIST vs SYSTEM APP vs MEDIA PLAYER VIEW */}
-                                {win.type === "system" ? (
-                                    /* --- SYSTEM APPLICATION VIEW --- */
-                                <div
-                                  style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080' }}
-                                  className="h-full min-h-95 overflow-y-auto font-mono text-black"
-                                >
-                                  {/* Shared terminal path header */}
-                                  <div style={{ background: '#000080', color: '#fff', fontSize: '11px', padding: '2px 8px', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
-                                    C:\PORTFOLIO\{win.id.toUpperCase()}.EXE&nbsp;
-                                    <span className="animate-pulse">_</span>
-                                  </div>
-
-                                  <div className="p-4">
-
-                                    {/* ── ABOUT ── */}
-                                    {win.id === "about" && (
-                                      <div className="space-y-4">
-                                        <div className="flex gap-3 items-start">
+                                {/* 1. DYNAMIC SUB-VIEW BRANCH: FOLDER VIEW */}
+                                {win.type === "folder" ? (
+                                  <div 
+                                    style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080', minHeight: '380px', padding: '16px' }} 
+                                    className="grid grid-cols-4 gap-6 content-start overflow-y-auto shadow-inner font-sans h-full"
+                                  >
+                                    {win.items && win.items.length > 0 ? (
+                                      win.items.map((subItem: any, subIdx: number) => {
+                                        const mappedSubId = `sub-${win.id.split('-')[1]}-${subIdx}`;
+                                        return (
                                           <div
-                                            style={{ background: '#000080', border: '2px solid', borderColor: '#fff #808080 #808080 #fff', width: 64, height: 64, flexShrink: 0 }}
-                                            className="flex items-center justify-center text-3xl"
+                                            key={subIdx}
+                                            onClick={() => openWin(mappedSubId)}
+                                            className="flex flex-col items-center justify-center p-2 cursor-pointer hover:bg-[#000080]/10 border border-transparent hover:border-black/10 rounded-sm group text-center"
                                           >
-                                            🧑‍💻
+                                            <div className="mb-2 text-[#000080] filter drop-shadow-sm group-active:scale-95 transition-transform">
+                                              <MovieRoundedIcon sx={{ fontSize: 48, color: '#3b82f6' }} />
+                                            </div>
+                                            <span className="text-[11px] text-black leading-tight truncate max-w-full font-medium">
+                                              {subItem.title.replace(/\s+/g, "_")}.exe
+                                            </span>
                                           </div>
-                                          <div>
-                                            <h2 style={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 'bold', color: '#000080', margin: '0 0 2px' }}>
-                                              JOEBECK ANDREW F. GUSI
-                                            </h2>
-                                            <p style={{ fontSize: 10, color: '#808080', margin: '0 0 4px' }}>
-                                              Computer Engineer · Video Editor · Manila, PH
-                                            </p>
+                                        );
+                                      })
+                                    ) : (
+                                      <div className="col-span-4 text-center text-gray-500 mt-8 text-xs font-mono">
+                                        This folder is empty. (Check lib/content.ts to ensure "items" is populated!)
+                                      </div>
+                                    )}
+                                  </div>
+                                ) 
+                                
+                                /* 2. DYNAMIC SUB-VIEW BRANCH: SYSTEM APPLICATION VIEW */
+                                : win.type === "system" ? (
+                                  <div
+                                    style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080' }}
+                                    className="h-full min-h-95 overflow-y-auto font-mono text-black"
+                                  >
+                                    <div style={{ background: '#000080', color: '#fff', fontSize: '11px', padding: '2px 8px', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
+                                      C:\PORTFOLIO\{win.id.toUpperCase()}.EXE&nbsp;
+                                      <span className="animate-pulse">_</span>
+                                    </div>
+
+                                    <div className="p-4">
+                                      {/* ── ABOUT ── */}
+                                      {win.id === "about" && (
+                                        <div className="space-y-4">
+                                          <div className="flex gap-3 items-start">
                                             <div
-                                              style={{ display: 'inline-block', background: '#c0c0c0', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '1px 8px', fontSize: 10, color: '#000080' }}
+                                              style={{ background: '#000080', border: '2px solid', borderColor: '#fff #808080 #808080 #fff', width: 64, height: 64, flexShrink: 0 }}
+                                              className="flex items-center justify-center"
                                             >
-                                              ● ONLINE
+                                              <PersonRoundedIcon sx={{ fontSize: 40, color: '#fff' }} />
                                             </div>
-                                          </div>
-                                        </div>
-
-                                        <div
-                                          style={{ background: '#f8f8f8', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '8px 10px', fontSize: 11, lineHeight: 1.7 }}
-                                        >
-                                          I bridge the gap between{' '}
-                                          <span style={{ color: '#000080', fontWeight: 'bold' }}>tactile hardware</span> and{' '}
-                                          <span style={{ color: '#800000', fontWeight: 'bold' }}>high-retention digital experiences</span>.
-                                          Computer Engineering student specializing in frontend dev and embedded IoT systems.
-                                          <br /><br />
-                                          Beyond code, I'm a proficient video editor in DaVinci Resolve — documentary storytelling,
-                                          complex VFX. Avid hiker & mountaineer, which directly inspires my safety-focused engineering.
-                                        </div>
-
-                                        <div style={{ background: '#ffffe1', borderLeft: '3px solid #ff0000', border: '1px solid #c0c0c0', padding: '6px 8px', fontSize: 10 }}>
-                                          <span style={{ color: '#ff0000', fontWeight: 'bold' }}>SYS NOTE:</span>{' '}
-                                          This portfolio runs on React + Next.js. All video assets streamed via Azure Blob Storage.
-                                        </div>
-                                      </div>
-                                    )}
-
-                                    {/* ── RESUME ── */}
-                                    {win.id === "resume" && (
-                                      <div className="space-y-3">
-                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace' }}>
-                                          ▶ EXPERIENCE
-                                        </div>
-                                        <div style={{ borderLeft: '3px solid #000080', padding: '4px 8px', background: '#f8f8f8', marginBottom: 8 }}>
-                                          <p style={{ margin: '0 0 2px', fontSize: 12, fontWeight: 'bold', color: '#000080' }}>Freelance Developer/Editor</p>
-                                          <p style={{ margin: '0 0 4px', fontSize: 10, color: '#808080' }}>2023 – Today </p>
-                                          <ul style={{ margin: 0, paddingLeft: 14, fontSize: 10, color: '#333', lineHeight: 1.6 }}>
-                                            <li>Front-End and Website Developer</li>
-                                            <li>Video Editing</li>
-                                          </ul>
-                                        </div>
-
-                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginTop: 8 }}>
-                                          ▶ NOTABLE PROJECTS
-                                        </div>
-
-                                        {[
-                                          { title: 'HikeSafe', year: '2026', desc: 'Emergency messaging via LoRa + GPS for signal-dead zones.' },
-                                          { title: 'P3KCARS', year: '2025', desc: 'Responsive public website with polished user-facing experience.' },
-                                          { title: 'ResortifyPH', year: '2025', desc: 'Full-pledged website inspired from Airbnb.' },
-                                        ].map((proj) => (
-                                          <div key={proj.title} style={{ borderLeft: '3px solid #000080', padding: '4px 8px', background: '#f8f8f8', marginBottom: 6 }}>
-                                            <p style={{ margin: '0 0 2px', fontSize: 12, fontWeight: 'bold', color: '#000080' }}>
-                                              {proj.title} <span style={{ color: '#808080', fontWeight: 'normal' }}>({proj.year})</span>
-                                            </p>
-                                            <p style={{ margin: 0, fontSize: 10, color: '#333' }}>{proj.desc}</p>
-                                          </div>
-                                        ))}
-
-                                        <button
-                                          type="button"
-                                          onClick={() => window.open('/CV_GUSI.pdf', '_blank')}
-                                          style={{ marginTop: 8, padding: '4px 12px', fontSize: 11, fontFamily: 'monospace', cursor: 'pointer', background: '#c0c0c0', border: '2px solid', borderColor: '#fff #808080 #808080 #fff' }}
-                                        >
-                                          📂 Open Full PDF Resume
-                                        </button>
-                                      </div>
-                                    )}
-
-                                    {/* ── SKILLS ── */}
-                                    {win.id === "skills" && (
-                                      <div className="space-y-3">
-                                        {[
-                                          {
-                                            label: '▶ WEB DEVELOPMENT',
-                                            color: '#000080',
-                                            skills: [
-                                              { name: 'React / Next.js', pct: 90 },
-                                              { name: 'TypeScript', pct: 82 },
-                                              { name: 'Tailwind CSS', pct: 88 },
-                                              { name: 'Node.js', pct: 75 },
-                                              { name: 'Shopify Liquid', pct: 70 },
-                                            ],
-                                            barColor: 'repeating-linear-gradient(90deg,#000080 0px,#000080 6px,#1084d0 6px,#1084d0 12px)',
-                                          },
-                                          {
-                                            label: '▶ VIDEO & MEDIA',
-                                            color: '#800000',
-                                            skills: [
-                                              { name: 'DaVinci Resolve', pct: 92 },
-                                              { name: 'Fusion Nodes', pct: 80 },
-                                              { name: '3D Camera Tracking', pct: 70 },
-                                              { name: 'Retention Editing', pct: 88 },
-                                            ],
-                                            barColor: 'repeating-linear-gradient(90deg,#800000 0px,#800000 6px,#c04040 6px,#c04040 12px)',
-                                          },
-                                          {
-                                            label: '▶ HARDWARE & IOT',
-                                            color: '#006000',
-                                            skills: [
-                                              { name: 'ESP32 / ESP8266', pct: 85 },
-                                              { name: 'LoRa / GPS', pct: 78 },
-                                              { name: 'Firebase', pct: 80 },
-                                            ],
-                                            barColor: 'repeating-linear-gradient(90deg,#006000 0px,#006000 6px,#40a040 6px,#40a040 12px)',
-                                          },
-                                        ].map((section) => (
-                                          <div key={section.label}>
-                                            <div style={{ background: section.color, color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginBottom: 6 }}>
-                                              {section.label}
-                                            </div>
-                                            {section.skills.map((skill) => (
-                                              <div key={skill.name} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, fontSize: 10 }}>
-                                                <span style={{ width: 130, flexShrink: 0 }}>{skill.name}</span>
-                                                <div style={{ flex: 1, height: 12, background: '#808080', border: '1px solid #606060', overflow: 'hidden' }}>
-                                                  <div style={{ height: '100%', width: `${skill.pct}%`, background: section.barColor }} />
-                                                </div>
-                                                <span style={{ width: 28, textAlign: 'right' }}>{skill.pct}%</span>
+                                            <div>
+                                              <h2 style={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 'bold', color: '#000080', margin: '0 0 2px' }}>
+                                                JOEBECK ANDREW F. GUSI
+                                              </h2>
+                                              <p style={{ fontSize: 10, color: '#808080', margin: '0 0 4px' }}>
+                                                Computer Engineer · Video Editor · Manila, PH
+                                              </p>
+                                              <div
+                                                style={{ display: 'inline-block', background: '#c0c0c0', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '1px 8px', fontSize: 10, color: '#000080' }}
+                                              >
+                                                ● ONLINE
                                               </div>
-                                            ))}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-
-                                    {/* ── CONTACT ── */}
-                                    {win.id === "contact" && (
-                                      <div className="space-y-3">
-                                        <div
-                                          style={{ background: '#f8f8f8', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '4px 8px', fontSize: 10, color: '#808080', fontStyle: 'italic' }}
-                                        >
-                                          C:\USERS\JOEBECK\CONTACT_INFO.txt <span className="animate-pulse">_</span>
-                                        </div>
-
-                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace' }}>
-                                          ▶ NETWORK ADDRESSES
-                                        </div>
-
-                                        {[
-                                          { label: 'LOCATION', value: 'Manila, Philippines' },
-                                          { label: 'EMAIL', value: 'joebeckgusi25@gmail.com' },
-                                          { label: 'LINKEDIN', value: 'www.linkedin.com/in/gusi-joebeck-andrew' },
-                                          { label: 'GITHUB', value: 'https://github.com/B1Kjuu' },
-                                          { label: 'FACEBOOK', value: 'https://www.facebook.com/b1kjuu' },
-                                        ].map((field) => (
-                                          <div key={field.label} style={{ marginBottom: 6 }}>
-                                            <p style={{ margin: '0 0 2px', fontSize: 10, color: '#444' }}>{field.label}</p>
-                                            <div style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '3px 8px', fontSize: 11, fontFamily: 'monospace' }}>
-                                              {field.value}
                                             </div>
                                           </div>
-                                        ))}
 
-                                        <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginTop: 8 }}>
-                                          ▶ SEND MESSAGE
+                                          <div
+                                            style={{ background: '#f8f8f8', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '8px 10px', fontSize: 11, lineHeight: 1.7 }}
+                                          >
+                                            I bridge the gap between{' '}
+                                            <span style={{ color: '#000080', fontWeight: 'bold' }}>tactile hardware</span> and{' '}
+                                            <span style={{ color: '#800000', fontWeight: 'bold' }}>high-retention digital experiences</span>.
+                                            Computer Engineering student specializing in frontend dev and embedded IoT systems.
+                                            <br /><br />
+                                            Beyond code, I'm a proficient video editor in DaVinci Resolve — documentary storytelling,
+                                            complex VFX. Avid hiker & mountaineer, which directly inspires my safety-focused engineering.
+                                          </div>
+
+                                          <div style={{ background: '#ffffe1', borderLeft: '3px solid #ff0000', border: '1px solid #c0c0c0', padding: '6px 8px', fontSize: 10 }}>
+                                            <span style={{ color: '#ff0000', fontWeight: 'bold' }}>SYS NOTE:</span>{' '}
+                                            This portfolio runs on React + Next.js. All video assets streamed via Azure Blob Storage.
+                                          </div>
                                         </div>
+                                      )}
 
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                                          <input
-                                            type="text"
-                                            placeholder="Your name..."
-                                            style={{ fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', border: '2px solid', borderColor: '#808080 #fff #fff #808080', background: '#fff', width: '100%', boxSizing: 'border-box' as const }}
-                                          />
-                                          <textarea
-                                            placeholder="Your message..."
-                                            rows={3}
-                                            style={{ fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', border: '2px solid', borderColor: '#808080 #fff #fff #808080', background: '#fff', width: '100%', boxSizing: 'border-box' as const, resize: 'none' }}
-                                          />
+                                      {/* ── RESUME ── */}
+                                      {win.id === "resume" && (
+                                        <div className="space-y-3">
+                                          <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace' }}>
+                                            ▶ EXPERIENCE
+                                          </div>
+                                          <div style={{ borderLeft: '3px solid #000080', padding: '4px 8px', background: '#f8f8f8', marginBottom: 8 }}>
+                                            <p style={{ margin: '0 0 2px', fontSize: 12, fontWeight: 'bold', color: '#000080' }}>Freelance Developer/Editor</p>
+                                            <p style={{ margin: '0 0 4px', fontSize: 10, color: '#808080' }}>2023 – Today </p>
+                                            <ul style={{ margin: 0, paddingLeft: 14, fontSize: 10, color: '#333', lineHeight: 1.6 }}>
+                                              <li>Front-End and Website Developer</li>
+                                              <li>Video Editing</li>
+                                            </ul>
+                                          </div>
+
+                                          <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginTop: 8 }}>
+                                            ▶ NOTABLE PROJECTS
+                                          </div>
+
+                                          {[
+                                            { title: 'HikeSafe', year: '2026', desc: 'Emergency messaging via LoRa + GPS for signal-dead zones.' },
+                                            { title: 'P3KCARS', year: '2025', desc: 'Responsive public website with polished user-facing experience.' },
+                                            { title: 'ResortifyPH', year: '2025', desc: 'Full-fledged website inspired from Airbnb.' },
+                                          ].map((proj) => (
+                                            <div key={proj.title} style={{ borderLeft: '3px solid #000080', padding: '4px 8px', background: '#f8f8f8', marginBottom: 6 }}>
+                                              <p style={{ margin: '0 0 2px', fontSize: 12, fontWeight: 'bold', color: '#000080' }}>
+                                                {proj.title} <span style={{ color: '#808080', fontWeight: 'normal' }}>({proj.year})</span>
+                                              </p>
+                                              <p style={{ margin: 0, fontSize: 10, color: '#333' }}>{proj.desc}</p>
+                                            </div>
+                                          ))}
+
                                           <button
                                             type="button"
-                                            style={{ alignSelf: 'flex-start', padding: '4px 12px', fontSize: 11, fontFamily: 'monospace', cursor: 'pointer', background: '#c0c0c0', border: '2px solid', borderColor: '#fff #808080 #808080 #fff' }}
+                                            onClick={() => window.open('/CV_GUSI.pdf', '_blank')}
+                                            style={{ marginTop: 8, padding: '4px 12px', fontSize: 11, fontFamily: 'monospace', cursor: 'pointer', background: '#c0c0c0', border: '2px solid', borderColor: '#fff #808080 #808080 #fff', display: 'flex', alignItems: 'center' }}
                                           >
-                                            Send via TCP/IP
+                                            <PictureAsPdfRoundedIcon sx={{ fontSize: 16, mr: 0.5, color: '#800000' }} /> Open Full PDF Resume
                                           </button>
                                         </div>
-                                      </div>
-                                    )}
+                                      )}
 
+                                      {/* ── SKILLS ── */}
+                                      {win.id === "skills" && (
+                                        <div className="space-y-3">
+                                          {[
+                                            {
+                                              label: '▶ WEB DEVELOPMENT',
+                                              color: '#000080',
+                                              skills: [
+                                                { name: 'React / Next.js', pct: 90 },
+                                                { name: 'TypeScript', pct: 82 },
+                                                { name: 'Tailwind CSS', pct: 88 },
+                                                { name: 'Node.js', pct: 75 },
+                                                { name: 'Shopify Liquid', pct: 70 },
+                                              ],
+                                              barColor: 'repeating-linear-gradient(90deg,#000080 0px,#000080 6px,#1084d0 6px,#1084d0 12px)',
+                                            },
+                                            {
+                                              label: '▶ VIDEO & MEDIA',
+                                              color: '#800000',
+                                              skills: [
+                                                { name: 'DaVinci Resolve', pct: 92 },
+                                                { name: 'Fusion Nodes', pct: 80 },
+                                                { name: '3D Camera Tracking', pct: 70 },
+                                                { name: 'Retention Editing', pct: 88 },
+                                              ],
+                                              barColor: 'repeating-linear-gradient(90deg,#800000 0px,#800000 6px,#c04040 6px,#c04040 12px)',
+                                            },
+                                            {
+                                              label: '▶ HARDWARE & IOT',
+                                              color: '#006000',
+                                              skills: [
+                                                { name: 'ESP32 / ESP8266', pct: 85 },
+                                                { name: 'LoRa / GPS', pct: 78 },
+                                                { name: 'Firebase', pct: 80 },
+                                              ],
+                                              barColor: 'repeating-linear-gradient(90deg,#006000 0px,#006000 6px,#40a040 6px,#40a040 12px)',
+                                            },
+                                          ].map((section) => (
+                                            <div key={section.label}>
+                                              <div style={{ background: section.color, color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginBottom: 6 }}>
+                                                {section.label}
+                                              </div>
+                                              {section.skills.map((skill) => (
+                                                <div key={skill.name} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, fontSize: 10 }}>
+                                                  <span style={{ width: 130, flexShrink: 0 }}>{skill.name}</span>
+                                                  <div style={{ flex: 1, height: 12, background: '#808080', border: '1px solid #606060', overflow: 'hidden' }}>
+                                                    <div style={{ height: '100%', width: `${skill.pct}%`, background: section.barColor }} />
+                                                  </div>
+                                                  <span style={{ width: 28, textAlign: 'right' }}>{skill.pct}%</span>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+
+                                      {/* ── CONTACT ── */}
+                                      {win.id === "contact" && (
+                                        <div className="space-y-3">
+                                          <div
+                                            style={{ background: '#f8f8f8', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '4px 8px', fontSize: 10, color: '#808080', fontStyle: 'italic' }}
+                                          >
+                                            C:\USERS\JOEBECK\CONTACT_INFO.txt <span className="animate-pulse">_</span>
+                                          </div>
+
+                                          <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace' }}>
+                                            ▶ NETWORK ADDRESSES
+                                          </div>
+
+                                          {[
+                                            { label: 'LOCATION', value: 'Manila, Philippines' },
+                                            { label: 'EMAIL', value: 'joebeckgusi25@gmail.com' },
+                                            { label: 'LINKEDIN', value: 'www.linkedin.com/in/gusi-joebeck-andrew' },
+                                            { label: 'GITHUB', value: 'https://github.com/B1Kjuu' },
+                                            { label: 'FACEBOOK', value: 'https://www.facebook.com/b1kjuu' },
+                                          ].map((field) => (
+                                            <div key={field.label} style={{ marginBottom: 6 }}>
+                                              <p style={{ margin: '0 0 2px', fontSize: 10, color: '#444' }}>{field.label}</p>
+                                              <div style={{ background: '#fff', border: '2px solid', borderColor: '#808080 #fff #fff #808080', padding: '3px 8px', fontSize: 11, fontFamily: 'monospace' }}>
+                                                {field.value}
+                                              </div>
+                                            </div>
+                                          ))}
+
+                                          <div style={{ background: '#000080', color: '#fff', fontSize: 11, padding: '2px 8px', fontFamily: 'monospace', marginTop: 8 }}>
+                                            ▶ SEND MESSAGE
+                                          </div>
+
+                                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                            <input
+                                              type="text"
+                                              placeholder="Your name..."
+                                              style={{ fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', border: '2px solid', borderColor: '#808080 #fff #fff #808080', background: '#fff', width: '100%', boxSizing: 'border-box' as const }}
+                                            />
+                                            <textarea
+                                              placeholder="Your message..."
+                                              rows={3}
+                                              style={{ fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', border: '2px solid', borderColor: '#808080 #fff #fff #808080', background: '#fff', width: '100%', boxSizing: 'border-box' as const, resize: 'none' }}
+                                            />
+                                            <button
+                                              type="button"
+                                              style={{ alignSelf: 'flex-start', padding: '4px 12px', fontSize: 11, fontFamily: 'monospace', cursor: 'pointer', background: '#c0c0c0', border: '2px solid', borderColor: '#fff #808080 #808080 #fff' }}
+                                            >
+                                              Send via TCP/IP
+                                            </button>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                    </div>
                                   </div>
-                                </div>
-
-
-                                ) : (
-                                  
-                                  /* --- MEDIA PLAYER VIEW --- */
+                                ) 
+                                
+                                /* 3. DYNAMIC SUB-VIEW BRANCH: MEDIA PLAYER VIEW */
+                                : (
                                   <div className="flex gap-4 h-full min-h-95">
                                     {/* Left: Sleek Black Media Player */}
                                     <div className="flex-1 bg-black border-2 border-gray-400 border-t-gray-800 border-l-gray-800 relative flex items-center justify-center">
                                       {win.videoUrl ? (
                                         <video 
-                                          key={win.videoUrl}
-                                          src={win.videoUrl} 
+                                          key={typeof win.videoUrl === 'string' ? win.videoUrl : (win.videoUrl as any)?.src || 'video'}
+                                          src={typeof win.videoUrl === 'string' ? win.videoUrl : (win.videoUrl as any)?.src} 
                                           controls 
                                           autoPlay 
-                                          muted
-                                          loop
+                                          muted 
+                                          loop 
                                           playsInline 
-                                          preload="auto"
-                                          className="absolute inset-0 w-full h-full object-contain pointer-events-auto select-auto" 
-                                          onPointerDown={(e) => e.stopPropagation()}
+                                          className="absolute inset-0 w-full h-full object-contain" 
                                         />
                                       ) : (
-                                        <div className="text-white text-xs">Media File Not Found</div>
+                                        <div className="text-[#f59d1a] text-xs font-mono uppercase tracking-widest text-center px-4">
+                                          Media File Not Found <br/>
+                                          <span className="text-gray-500 text-[10px] mt-2 block">(Check if videoUrl is set in lib/content.ts)</span>
+                                        </div>
                                       )}
                                     </div>
 
@@ -1307,8 +1481,17 @@ export default function EditorPage() {
                                     setIsStartMenuOpen(false);
                                     setStartMenuHover(null);
                                   }}
-                                  className="flex items-center justify-between px-2 py-1.5 text-left text-[12px] hover:bg-[#000080] hover:text-white"
+                                  className="flex items-center justify-start gap-2 px-2 py-1.5 text-left text-[12px] hover:bg-[#000080] hover:text-white"
                                 >
+                                  {item.icon && (
+                                    <Image 
+                                      src={item.icon} 
+                                      alt="" 
+                                      width={16} 
+                                      height={16} 
+                                      className="object-contain"
+                                    />
+                                  )}
                                   <span>{item.label}</span>
                                 </button>
                               ))}

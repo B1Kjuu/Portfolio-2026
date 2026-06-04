@@ -86,7 +86,7 @@ export const techProjects: TechProject[] = [
     description: "Archived Old Portfolio, forked from a template",
     note: "Templated Portfolio from one of the trending templates",
     image: OLDPORTFOLIO,
-    demoLink: "https://b1-kjuu-portfolio.vercel.app/editing",
+    demoLink: "https://b1kjuu-portfolio.vercel.app",
   },
 ];
 
@@ -168,7 +168,7 @@ type: "video",
         title: "Final Clip 3",
         description: "Fast-paced compilation featuring energetic cuts, dynamic zooms, and trend-conscious audio syncing.",
         note: "Social media deliverable.",
-        videoUrl: "https://b1kjuumedia2026.blob.core.windows.net/videos/UGC/RAW%20ClipTrd_Final.mp4"
+        videoUrl: "https://b1kjuumedia2026.blob.core.windows.net/videos/UGC/RAW%20Clip%20Trd_Final.mp4"
       },
       {
         type: "video",
