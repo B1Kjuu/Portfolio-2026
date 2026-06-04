@@ -1173,6 +1173,8 @@ export default function EditorPage() {
                                           src={win.videoUrl} 
                                           controls 
                                           autoPlay 
+                                          muted
+                                          loop
                                           playsInline 
                                           preload="auto"
                                           className="absolute inset-0 w-full h-full object-contain pointer-events-auto select-auto" 
