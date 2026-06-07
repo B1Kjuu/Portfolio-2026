@@ -389,6 +389,13 @@ type: "video",
         note: "Polished VSL ready for campaign deployment.",
         videoUrl: "https://b1kjuumedia2026.blob.core.windows.net/videos/LONG%20FORM%20/VSL%20FINAL.mp4"
       },
+      {
+        type: "video",
+        title: "3 forgotten tricks from the 1950s on how to be a beautiful woman",
+        description: "Test Vintage-style Edit for a client.",
+        note: "vintage-style edit about 1950s",
+        videoUrl: "https://b1kjuumedia2026.blob.core.windows.net/videos/LONG%20FORM%20/3%20forgotten%20tricks%20from%20the%201950s%20on%20how%20to%20be%20a%20beautiful%20woman.mp4"
+      },
     ]
   },
   {
